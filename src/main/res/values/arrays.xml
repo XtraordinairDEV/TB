@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="searchChoices">
+        <item>All</item>
+        <item>Beers Only</item>
+        <item>Breweries Only</item>
+    </string-array>
+</resources>

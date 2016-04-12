@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Featured">
+        <menu>
+            <item
+                android:id="@+id/feat_beer"
+                android:icon="@drawable/ic_local_bar_black_24dp"
+                android:title="Featured Beer" />
+            <item
+                android:id="@+id/feat_brewery"
+                android:icon="@drawable/ic_store_mall_directory_black_24dp"
+                android:title="Featured Brewery" />
+        </menu>
+    </item>
+
+    <item android:title="Random">
+        <menu>
+            <item
+                android:id="@+id/rand_beer"
+                android:icon="@drawable/ic_local_bar_black_24dp"
+                android:title="Random Beer" />
+            <item
+                android:id="@+id/rand_brewery"
+                android:icon="@drawable/ic_store_mall_directory_black_24dp"
+                android:title="Random Brewery" />
+        </menu>
+    </item>
+
+</menu>
