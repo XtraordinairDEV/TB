@@ -100,6 +100,8 @@ public class SearchResultFragment extends Fragment {
             });
             //Add divider to recyclerView
             recyclerView.addItemDecoration(new SimpleDividerItemDecoration(this.getActivity()));
+
+
         }
         return view;
     }
