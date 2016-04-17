@@ -84,6 +84,8 @@ public class MySearchResultRecyclerViewAdapter
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
                     mListener.onListFragmentInteraction(holder.mItem);
+
+
                 }
             }
         });
