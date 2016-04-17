@@ -31,9 +31,6 @@ public class SearchFragment extends Fragment {
     private EditText searchInputEditText;
     private Button searchButton;
     private Spinner searchChoicesSpinner;
-    private final int SEARCH_BEER_ONLY = 1;
-    private final int SEARCH_BREWERIES_ONLY=2;
-    private final int SEARCH_ALL = 3;
 
 
     /*
@@ -46,9 +43,8 @@ public class SearchFragment extends Fragment {
 
     public static SearchFragment newInstance() {
 
-        SearchFragment fragment = new SearchFragment();
         //CREATE BUNDLE WITH ARGS IF NEEDED
-        return fragment;
+        return new SearchFragment();
     }
     /*
      * INITIALIZATION METHODS END
@@ -56,7 +52,7 @@ public class SearchFragment extends Fragment {
 
 
     /*
-    * FRAGMENT LIFECYCYLE START
+    * FRAGMENT LIFECYCLE START
     */
 
     @Override
@@ -192,13 +188,17 @@ public class SearchFragment extends Fragment {
     }
 
     private int getSearchType() {
-        String choice = searchChoicesSpinner.getSelectedItem().toString();
+        final int SEARCH_BEER_ONLY = 1;
+        final int SEARCH_BREWERIES_ONLY=2;
+        final int SEARCH_ALL = 3;
 
-        if (choice.equals("All"))
+        String searchTypeOption = searchChoicesSpinner.getSelectedItem().toString();
+
+        if (searchTypeOption.equals("All"))
             return SEARCH_ALL;
-        else if (choice.equals("Beers Only"))
+        else if (searchTypeOption.equals("Beers Only"))
             return SEARCH_BEER_ONLY;
-        else if (choice.equals("Breweries Only"))
+        else if (searchTypeOption.equals("Breweries Only"))
             return SEARCH_BREWERIES_ONLY;
         else
             return SEARCH_ALL;
