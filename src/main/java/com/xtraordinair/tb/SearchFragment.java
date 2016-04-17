@@ -182,6 +182,7 @@ public class SearchFragment extends Fragment {
 
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
+                    .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
                     .replace(R.id.main_fragment,
                             SearchResultFragment.newInstance(resultsSet))
                     .addToBackStack("Search -> Results")
