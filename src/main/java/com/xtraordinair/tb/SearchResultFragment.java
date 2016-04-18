@@ -3,12 +3,14 @@ package com.xtraordinair.tb;
 import android.content.Context;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -96,6 +98,13 @@ public class SearchResultFragment extends Fragment {
                     // for efficiency purposes, only notify the adapter of what elements that got changed
                     // curSize will equal to the index of the first element inserted because the list is 0-indexed
                     recyclerViewAdapter.notifyItemRangeInserted(curSize, shownResults.size() - 1);
+
+                    if(resultSet.getTotalPages() > 0  && resultSet.getPage() <= resultSet.getTotalPages()) {
+                        Toast.makeText(getActivity(),
+                                "Page " + resultSet.getPage() + " of " + resultSet.getTotalPages(),
+                                Toast.LENGTH_LONG)
+                            .show();
+                    }
                 }
             });
             //Add divider to recyclerView
@@ -110,6 +119,17 @@ public class SearchResultFragment extends Fragment {
     public void onStart() {
         super.onStart();
         setRetainInstance(true);
+
+        if(resultSet.getTotalPages() == 0) {
+            Toast.makeText(getActivity(), "No results found. \n Please try another search",
+                    Toast.LENGTH_LONG).show();
+        }else {
+            Toast.makeText(getActivity(),
+                    "Page " + resultSet.getPage() + " of " + resultSet.getTotalPages(),
+                    Toast.LENGTH_LONG)
+                    .show();
+        }
+
 
     }
 

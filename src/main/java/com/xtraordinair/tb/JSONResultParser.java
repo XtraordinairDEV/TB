@@ -64,4 +64,17 @@ public class JSONResultParser {
         }
         return searchResults;
     }
+
+    public static int parseTotalNumberOfPages(JSONObject searchQueryResult){
+        final String TAG_TOTAL_PAGES = "numberOfPages";
+        String strTotalPages;
+        int totalPages = 0;
+
+        strTotalPages = searchQueryResult.optString(TAG_TOTAL_PAGES);
+
+        if(!strTotalPages.equals(""))
+            totalPages = Integer.parseInt(strTotalPages);
+
+        return totalPages;
+    }
 }

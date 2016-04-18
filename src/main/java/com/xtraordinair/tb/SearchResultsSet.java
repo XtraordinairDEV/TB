@@ -16,6 +16,7 @@ public class SearchResultsSet implements Parcelable {
     private int page;
     private ArrayList<SearchResult> resultList = new ArrayList<>();
     private ArrayList<SearchResult> deltaResultArrayList = new ArrayList<>();
+    private int totalPages = 0;
 
     public SearchResultsSet(boolean isPag, int sType, String query) {
         isPaginated = isPag;
@@ -52,9 +53,19 @@ public class SearchResultsSet implements Parcelable {
         return deltaResultArrayList;
     }
 
+    private void setTotalPages(int numPages){
+        totalPages = numPages;
+    }
+
+    public int getTotalPages(){
+        return totalPages;
+    }
+
     public void addResults(JSONObject searchQueryResult) {
         JSONArray parsedResults = JSONResultParser.parseSearchResultsToJSONArray(searchQueryResult);
         deltaResultArrayList = new ArrayList<>();
+
+        setTotalPages(JSONResultParser.parseTotalNumberOfPages(searchQueryResult));
 
         if(parsedResults != null){
             deltaResultArrayList.addAll(JSONResultParser.createArrayListFromJSONArray(parsedResults,
@@ -68,6 +79,10 @@ public class SearchResultsSet implements Parcelable {
      * PARCELABLE CODE START
      */
 
+    public void setPage(int page) {
+        this.page = page;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -80,6 +95,8 @@ public class SearchResultsSet implements Parcelable {
         dest.writeString(this.userSearchQuery);
         dest.writeInt(this.page);
         dest.writeList(this.resultList);
+        dest.writeList(this.deltaResultArrayList);
+        dest.writeInt(this.totalPages);
     }
 
     protected SearchResultsSet(Parcel in) {
@@ -87,8 +104,11 @@ public class SearchResultsSet implements Parcelable {
         this.searchType = in.readInt();
         this.userSearchQuery = in.readString();
         this.page = in.readInt();
-        this.resultList = new ArrayList<>();
+        this.resultList = new ArrayList<SearchResult>();
         in.readList(this.resultList, SearchResult.class.getClassLoader());
+        this.deltaResultArrayList = new ArrayList<SearchResult>();
+        in.readList(this.deltaResultArrayList, SearchResult.class.getClassLoader());
+        this.totalPages = in.readInt();
     }
 
     public static final Creator<SearchResultsSet> CREATOR = new Creator<SearchResultsSet>() {
@@ -103,11 +123,7 @@ public class SearchResultsSet implements Parcelable {
         }
     };
 
-    public void setPage(int page) {
-        this.page = page;
-    }
-
-     /*
+    /*
      * PARCELABLE CODE END
      */
 }
