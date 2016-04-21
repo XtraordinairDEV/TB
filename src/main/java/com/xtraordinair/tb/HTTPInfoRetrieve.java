@@ -56,6 +56,10 @@ public class HTTPInfoRetrieve {
                             public void onCompleted(Exception e, String result) {
                                 // download done...
                                 // do stuff with the File or error//
+
+                                if(e != null){
+                                    e.printStackTrace();
+                                }
                             }
                         });
 

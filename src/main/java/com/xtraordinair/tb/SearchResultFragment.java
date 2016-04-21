@@ -3,7 +3,6 @@ package com.xtraordinair.tb;
 import android.content.Context;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -88,18 +87,19 @@ public class SearchResultFragment extends Fragment {
             recyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager, resultSet.getPage()) {
                 @Override
                 public void onLoadMore(int page, int totalItemsCount) {
-                    customLoadMoreDataFromApi(page);
+                    if(resultSet.getTotalPages() > 0  && resultSet.getPage() < resultSet.getTotalPages()) {
+                        customLoadMoreDataFromApi(page);
 
-                    // update the adapter, saving the last known size
-                    int curSize = recyclerViewAdapter.getItemCount();
-                    shownResults.addAll(resultSet.getDeltaResultList());
+                        // update the adapter, saving the last known size
+                        int curSize = recyclerViewAdapter.getItemCount();
+                        shownResults.addAll(resultSet.getDeltaResultList());
 
 
-                    // for efficiency purposes, only notify the adapter of what elements that got changed
-                    // curSize will equal to the index of the first element inserted because the list is 0-indexed
-                    recyclerViewAdapter.notifyItemRangeInserted(curSize, shownResults.size() - 1);
+                        // for efficiency purposes, only notify the adapter of what elements that got changed
+                        // curSize will equal to the index of the first element inserted because the list is 0-indexed
+                        recyclerViewAdapter.notifyItemRangeInserted(curSize, shownResults.size() - 1);
 
-                    if(resultSet.getTotalPages() > 0  && resultSet.getPage() <= resultSet.getTotalPages()) {
+
                         Toast.makeText(getActivity(),
                                 "Page " + resultSet.getPage() + " of " + resultSet.getTotalPages(),
                                 Toast.LENGTH_LONG)
@@ -121,15 +121,9 @@ public class SearchResultFragment extends Fragment {
         setRetainInstance(true);
 
         if(resultSet.getTotalPages() == 0) {
-            Toast.makeText(getActivity(), "No results found. \n Please try another search",
+            Toast.makeText(getActivity(), "No results found. \nPlease try another search.",
                     Toast.LENGTH_LONG).show();
-        }else {
-            Toast.makeText(getActivity(),
-                    "Page " + resultSet.getPage() + " of " + resultSet.getTotalPages(),
-                    Toast.LENGTH_LONG)
-                    .show();
         }
-
 
     }
 

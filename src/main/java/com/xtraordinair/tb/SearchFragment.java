@@ -10,6 +10,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -132,7 +133,7 @@ public class SearchFragment extends Fragment {
 
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v){
                 checkSearchParam();
             }
         });
@@ -168,6 +169,11 @@ public class SearchFragment extends Fragment {
                     .show();
         }
         else{
+            InputMethodManager imm = (InputMethodManager) getActivity()
+                    .getSystemService(Context.INPUT_METHOD_SERVICE);
+
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+
             searchInputEditText.setText("");
 
             SearchResultsSet resultsSet = new SearchResultsSet(true, getSearchType(),
