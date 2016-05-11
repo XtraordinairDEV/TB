@@ -16,6 +16,8 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
+import com.koushikdutta.async.future.Future;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -176,11 +178,7 @@ public class SearchFragment extends Fragment {
 
             searchInputEditText.setText("");
 
-            SearchResultsSet resultsSet = new SearchResultsSet(true, getSearchType(),
-                                                                userSearchQuery);
-
-            resultsSet = Search.accessAPISearchEndpoint(resultsSet,
-                    this.getActivity().getApplicationContext(), resultsSet.getPage());
+            SearchResultsSet resultsSet = new SearchResultsSet(true, getSearchType(), userSearchQuery);
 
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()

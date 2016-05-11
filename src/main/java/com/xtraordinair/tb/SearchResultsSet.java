@@ -3,10 +3,14 @@ package com.xtraordinair.tb;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.koushikdutta.async.future.Future;
+
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 public class SearchResultsSet implements Parcelable {
 
@@ -61,6 +65,33 @@ public class SearchResultsSet implements Parcelable {
         return totalPages;
     }
 
+    public int getSize() {
+        return resultList.size();
+    }
+
+    public JSONObject retrieveResults(Future<String> futureResultString) {
+        String resultString;
+        JSONObject jsonResults = null;
+
+        try {
+            resultString = futureResultString.get();
+        } catch (InterruptedException e) {
+            resultString = null;
+        } catch (ExecutionException e) {
+            resultString = null;
+        }
+
+        if(resultString != null){
+            try {
+                jsonResults = new JSONObject(resultString);
+            } catch (JSONException e) {
+                jsonResults = null;
+            }
+        }
+
+        return jsonResults;
+    }
+
     public void addResults(JSONObject searchQueryResult) {
         JSONArray parsedResults = JSONResultParser.parseSearchResultsToJSONArray(searchQueryResult);
         deltaResultArrayList = new ArrayList<>();
@@ -75,13 +106,14 @@ public class SearchResultsSet implements Parcelable {
 
     }
 
-    /*
-     * PARCELABLE CODE START
-     */
-
     public void setPage(int page) {
         this.page = page;
     }
+
+
+    /*
+     * PARCELABLE CODE START
+     */
 
     @Override
     public int describeContents() {
@@ -90,7 +122,7 @@ public class SearchResultsSet implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeByte(isPaginated ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isPaginated ? (byte) 1 : (byte) 0);
         dest.writeInt(this.searchType);
         dest.writeString(this.userSearchQuery);
         dest.writeInt(this.page);

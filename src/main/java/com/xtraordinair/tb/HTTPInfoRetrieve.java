@@ -24,7 +24,7 @@ public class HTTPInfoRetrieve {
     private static final String SEARCH = "search?";
     private static final String BREWERIES = "withBreweries=Y";
 
-    public static JSONObject getSearchQueryResult(String queryString, int queryInt, int pageNum,
+    public static Future<String> getSearchQueryResult(String queryString, int queryInt, int pageNum,
                                                   Context context){
 
         String query = "q=" + prepareSearchQuery(queryString);
@@ -38,15 +38,11 @@ public class HTTPInfoRetrieve {
                 AND + API_KEY +
                 AND + FORMAT;
 
-        Log.i("XO", url);
-
-        JSONObject jsonResult = performDownload(url, context);
-
-        return jsonResult;
+        Future futureResultString = performDownload(url, context);
+        return futureResultString;
     }
 
-    private static JSONObject performDownload(String url, Context context) {
-        JSONObject jsonResults = null;
+    private static Future<String> performDownload(String url, Context context) {
 
         Future<String> resultString= Ion.with(context)
                         .load(url)
@@ -63,18 +59,7 @@ public class HTTPInfoRetrieve {
                             }
                         });
 
-
-        try {
-            jsonResults = new JSONObject(resultString.get());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-
-        return jsonResults;
+        return resultString;
     }
 
     private static String prepareSearchQuery(String searchQuery) {
