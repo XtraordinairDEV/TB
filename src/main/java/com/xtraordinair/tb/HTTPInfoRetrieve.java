@@ -10,6 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.concurrent.ExecutionException;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.util.Log;
 
 /**
@@ -18,7 +19,7 @@ import android.util.Log;
 public class HTTPInfoRetrieve {
 
     private static final String DOMAIN = "http://api.brewerydb.com/v2/";
-    private static final String API_KEY = "key=986115309c2a3d0ad1ac46133d7ffe06";
+    private static final String KEY = "key=";
     private static final String FORMAT = "format=json";
     private static final String AND = "&";
     private static final String SEARCH = "search?";
@@ -30,12 +31,13 @@ public class HTTPInfoRetrieve {
         String query = "q=" + prepareSearchQuery(queryString);
         String queryType = getQueryType(queryInt);
         String resultPage = "p=" + pageNum;
+        Resources res = context.getResources();
 
         String url = DOMAIN + SEARCH + query +
                 AND + queryType +
                 AND + resultPage +
                 AND + BREWERIES +
-                AND + API_KEY +
+                AND + KEY + res.getString(R.string.API_KEY) +
                 AND + FORMAT;
 
         Future futureResultString = performDownload(url, context);
