@@ -32,4 +32,4 @@ proguard/
 captures/
 
 #Keyfile
-*/my_key.xml
+src/main/res/values/my_key.xml
