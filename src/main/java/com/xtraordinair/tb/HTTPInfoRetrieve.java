@@ -37,7 +37,7 @@ public class HTTPInfoRetrieve {
                 AND + queryType +
                 AND + resultPage +
                 AND + BREWERIES +
-                AND + KEY + res.getString(R.string.API_KEY) +
+                AND + KEY + res.getString(R.string.api_key) +
                 AND + FORMAT;
 
         Future futureResultString = performDownload(url, context);
