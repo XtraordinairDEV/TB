@@ -30,3 +30,6 @@ proguard/
 
 # Android Studio captures folder
 captures/
+
+#Keyfile
+src/main/res/values/my_key.xml

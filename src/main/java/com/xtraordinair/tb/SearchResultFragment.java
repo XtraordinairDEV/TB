@@ -11,6 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.koushikdutta.async.future.Future;
+
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 /**
@@ -24,8 +28,9 @@ public class SearchResultFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
-    private static final String ARG_PARAM1 = "Search Results";
+    private static final String ARG_PARAM1 = "Result Set";
     private SearchResultsSet resultSet;
+    private Future<String> futureResultString;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -55,6 +60,7 @@ public class SearchResultFragment extends Fragment {
 
         if (getArguments() != null) {
             resultSet = getArguments().getParcelable(ARG_PARAM1);
+            preloadNextPage(1);
         }
     }
 
@@ -69,7 +75,9 @@ public class SearchResultFragment extends Fragment {
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
             GridLayoutManager gridLayoutManager = new GridLayoutManager(context, mColumnCount);
             RecyclerView recyclerView = (RecyclerView) view;
+
             final ArrayList<SearchResult> shownResults = new ArrayList<>();
+            updateResultList();
             shownResults.addAll(resultSet.getResultList());
 
             if (mColumnCount <= 1) {
@@ -102,7 +110,7 @@ public class SearchResultFragment extends Fragment {
 
                         Toast.makeText(getActivity(),
                                 "Page " + resultSet.getPage() + " of " + resultSet.getTotalPages(),
-                                Toast.LENGTH_LONG)
+                                Toast.LENGTH_SHORT)
                             .show();
                     }
                 }
@@ -121,7 +129,7 @@ public class SearchResultFragment extends Fragment {
         setRetainInstance(true);
 
         if(resultSet.getTotalPages() == 0) {
-            Toast.makeText(getActivity(), "No results found. \nPlease try another search.",
+            Toast.makeText(getActivity(), "No results found.\nPlease try another search.",
                     Toast.LENGTH_LONG).show();
         }
 
@@ -164,11 +172,25 @@ public class SearchResultFragment extends Fragment {
 
     private void customLoadMoreDataFromApi(int page) {
         resultSet.setPage(page);
-        resultSet = Search.accessAPISearchEndpoint(resultSet, getActivity().getApplicationContext(),
-                                                    resultSet.getPage());
-
+        updateResultList();
     }
 
+    private void updateResultList(){
+        JSONObject j = resultSet.retrieveResults(futureResultString);
+        resultSet.addResults(j);
+        preloadNextPage();
+    }
+
+    private void preloadNextPage(){
+        futureResultString = Search.accessAPISearchEndpoint(resultSet, this.getActivity(),
+                resultSet.getPage()+1);
+
+    }
+    //load first page
+    private void preloadNextPage(int page){
+        futureResultString = Search.accessAPISearchEndpoint(resultSet, this.getActivity(),
+                page);
+    }
 
     /*
      * FRAGMENT SPECIFIC CODE END

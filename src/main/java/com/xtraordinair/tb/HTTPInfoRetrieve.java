@@ -10,6 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.concurrent.ExecutionException;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.util.Log;
 
 /**
@@ -18,35 +19,32 @@ import android.util.Log;
 public class HTTPInfoRetrieve {
 
     private static final String DOMAIN = "http://api.brewerydb.com/v2/";
-    private static final String API_KEY = "key=986115309c2a3d0ad1ac46133d7ffe06";
+    private static final String KEY = "key=";
     private static final String FORMAT = "format=json";
     private static final String AND = "&";
     private static final String SEARCH = "search?";
     private static final String BREWERIES = "withBreweries=Y";
 
-    public static JSONObject getSearchQueryResult(String queryString, int queryInt, int pageNum,
+    public static Future<String> getSearchQueryResult(String queryString, int queryInt, int pageNum,
                                                   Context context){
 
         String query = "q=" + prepareSearchQuery(queryString);
         String queryType = getQueryType(queryInt);
         String resultPage = "p=" + pageNum;
+        Resources res = context.getResources();
 
         String url = DOMAIN + SEARCH + query +
                 AND + queryType +
                 AND + resultPage +
                 AND + BREWERIES +
-                AND + API_KEY +
+                AND + KEY + res.getString(R.string.api_key) +
                 AND + FORMAT;
 
-        Log.i("XO", url);
-
-        JSONObject jsonResult = performDownload(url, context);
-
-        return jsonResult;
+        Future futureResultString = performDownload(url, context);
+        return futureResultString;
     }
 
-    private static JSONObject performDownload(String url, Context context) {
-        JSONObject jsonResults = null;
+    private static Future<String> performDownload(String url, Context context) {
 
         Future<String> resultString= Ion.with(context)
                         .load(url)
@@ -63,18 +61,7 @@ public class HTTPInfoRetrieve {
                             }
                         });
 
-
-        try {
-            jsonResults = new JSONObject(resultString.get());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-
-        return jsonResults;
+        return resultString;
     }
 
     private static String prepareSearchQuery(String searchQuery) {
