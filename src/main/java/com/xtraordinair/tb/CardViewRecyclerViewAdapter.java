@@ -16,19 +16,16 @@ import java.util.ArrayList;
 /**
  * TODO: Replace the implementation with code for your data type.
  */
-public class MySearchResultRecyclerViewAdapter
-        extends RecyclerView.Adapter<MySearchResultRecyclerViewAdapter.ViewHolder> {
+public class CardViewRecyclerViewAdapter
+        extends RecyclerView.Adapter<CardViewRecyclerViewAdapter.ViewHolder> {
 
     private final ArrayList<SearchResult> mValues;
-    private final OnListFragmentInteractionListener mListener;
     private final Context mContext;
     private final String LOLLIPOP_SDK = "5.";
 
-    public MySearchResultRecyclerViewAdapter(ArrayList<SearchResult> results,
-                                             OnListFragmentInteractionListener listener,
-                                             Context c) {
+    public CardViewRecyclerViewAdapter(ArrayList<SearchResult> results,
+                                       Context c) {
         mValues = results;
-        mListener = listener;
         mContext = c;
     }
 
@@ -36,18 +33,18 @@ public class MySearchResultRecyclerViewAdapter
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.result_relative_layout_view, parent, false);
+                .inflate(R.layout.cardview_layout, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        String imgURL = mValues.get(position).getIconLoc();
-        String topText = mValues.get(position).getName();
-        String bottomText = mValues.get(position).getSecondaryInfo();
-        String itemType = mValues.get(position).getType();
+        String imgURL = mValues.get(holder.getAdapterPosition()).getMediumIconLoc();
+        String topText = mValues.get(holder.getAdapterPosition()).getName();
+        String bottomText = mValues.get(holder.getAdapterPosition()).getSecondaryInfo();
+        String itemType = mValues.get(holder.getAdapterPosition()).getType();
 
-        holder.mItem = mValues.get(position);
+        holder.mItem = mValues.get(holder.getAdapterPosition());
         holder.mNameView.setText(topText);
         holder.mSecondaryInfoView.setText(bottomText);
 
@@ -76,7 +73,7 @@ public class MySearchResultRecyclerViewAdapter
                     .intoImageView(holder.mResultIcon);
         }
 
-
+        /*
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,6 +84,7 @@ public class MySearchResultRecyclerViewAdapter
                 }
             }
         });
+        */
     }
 
     @Override
@@ -104,9 +102,9 @@ public class MySearchResultRecyclerViewAdapter
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mNameView = (TextView) view.findViewById(R.id.result_name_textview);
-            mSecondaryInfoView = (TextView) view.findViewById(R.id.result_secondaryInfo_textview);
-            mResultIcon = (ImageView) view.findViewById(R.id.result_icon_imageview);
+            mNameView = (TextView) view.findViewById(R.id.cardview_result_name_textview);
+            mSecondaryInfoView = (TextView) view.findViewById(R.id.cardview_result_date_textview);
+            mResultIcon = (ImageView) view.findViewById(R.id.cardview_result_imageview);
         }
     }
 }

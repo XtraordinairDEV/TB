@@ -37,6 +37,7 @@ public class SearchResultFragment extends Fragment {
      * fragment (e.g. upon screen orientation changes).
      */
     public SearchResultFragment() {
+
     }
 
     /*
