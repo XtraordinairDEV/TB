@@ -81,7 +81,7 @@ public class SearchFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        // Inflate the cardview_layout for this fragment
         return inflater.inflate(R.layout.fragment_search, container, false);
     }
 
@@ -184,7 +184,7 @@ public class SearchFragment extends Fragment {
             fragmentManager.beginTransaction()
                     .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
                     .replace(R.id.main_fragment,
-                            SearchResultFragment.newInstance(resultsSet))
+                            SearchResultFragmentTwo.newInstance(resultsSet))
                     .addToBackStack("Search -> Results")
                     .commit();
         }
