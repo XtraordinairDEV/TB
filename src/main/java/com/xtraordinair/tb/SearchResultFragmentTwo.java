@@ -130,23 +130,6 @@ public class SearchResultFragmentTwo extends Fragment {
     private void loadResults() {
         //Get first page of results
         preloadNextPage(1);
-
-        //Set up RecyclerView
-        /*Context context = this.getActivity();
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 2);
-        RecyclerView recyclerView = new RecyclerView(context);
-        recyclerView.setLayoutManager(gridLayoutManager);
-
-        //Add results to ArrayList
-        updateResultList();
-
-        CardViewRecyclerViewAdapter cardViewRecyclerViewAdapter =
-                new CardViewRecyclerViewAdapter(resultSet.getResultList(), this.getActivity());
-        recyclerView.setAdapter(cardViewRecyclerViewAdapter);
-
-        mLinearLayout.addView(recyclerView);*/
-
         new InitialResults().execute();
 
     }
