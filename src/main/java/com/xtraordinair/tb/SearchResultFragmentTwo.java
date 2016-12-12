@@ -1,15 +1,12 @@
 package com.xtraordinair.tb;
 
 import android.app.Fragment;
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
