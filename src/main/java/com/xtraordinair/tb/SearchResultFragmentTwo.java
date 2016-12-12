@@ -55,9 +55,14 @@ public class SearchResultFragmentTwo extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        mLinearLayout = (LinearLayout)
-                inflater.inflate(R.layout.result_list_linear_layout, container, false);
-        return mLinearLayout;
+        if (mLinearLayout == null) {
+            mLinearLayout = (LinearLayout)
+                    inflater.inflate(R.layout.result_list_linear_layout, container, false);
+            loadResults();
+            return mLinearLayout;
+        } else{
+            return null;
+        }
     }
 
     @Override
@@ -73,7 +78,7 @@ public class SearchResultFragmentTwo extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        loadResults();
+
     }
 
     @Override
