@@ -161,6 +161,12 @@ public class SearchFragment extends Fragment {
 
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(MainActivity.FRAGMENT_TAG, "searchFrag");
+        super.onSaveInstanceState(outState);
+    }
+
     private void checkSearchParam(){
         String userSearchQuery = searchInputEditText.getText().toString();
 
@@ -184,7 +190,7 @@ public class SearchFragment extends Fragment {
             fragmentManager.beginTransaction()
                     .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
                     .replace(R.id.main_fragment,
-                            SearchResultFragmentTwo.newInstance(resultsSet))
+                            SearchResultFragmentTwo.newInstance(resultsSet), "SearchResults")
                     .addToBackStack("Search -> Results")
                     .commit();
         }

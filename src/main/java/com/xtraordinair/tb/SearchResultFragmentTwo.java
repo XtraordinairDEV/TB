@@ -6,12 +6,17 @@ import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.koushikdutta.async.future.Future;
 
@@ -45,7 +50,9 @@ public class SearchResultFragmentTwo extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments() != null) {
+        if(savedInstanceState != null){
+            resultSet = savedInstanceState.getParcelable(ARG_PARAM1);
+        } else if (getArguments() != null) {
             resultSet = getArguments().getParcelable(ARG_PARAM1);
             //preloadNextPage(1);
         }
@@ -55,11 +62,20 @@ public class SearchResultFragmentTwo extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+
+
         if (mLinearLayout == null) {
+            NestedScrollView scrollview = new NestedScrollView(SearchResultFragmentTwo.this.getActivity());
+            scrollview.setSmoothScrollingEnabled(true);
             mLinearLayout = (LinearLayout)
                     inflater.inflate(R.layout.result_list_linear_layout, container, false);
-            loadResults();
-            return mLinearLayout;
+
+            if(recyclerView == null) {
+                loadResults();
+            }
+            scrollview.setSmoothScrollingEnabled(true);
+            scrollview.addView(mLinearLayout);
+            return scrollview;
         } else{
             return null;
         }
@@ -88,6 +104,7 @@ public class SearchResultFragmentTwo extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(ARG_PARAM1, resultSet);
         super.onSaveInstanceState(outState);
     }
 
@@ -131,9 +148,11 @@ public class SearchResultFragmentTwo extends Fragment {
 
     private void loadResults() {
         //Get first page of results
-        preloadNextPage(1);
-        new InitialResults().execute();
+        if(resultSet.getSize() == 0) {
+            preloadNextPage(1);
+        }
 
+        new InitialResults().execute();
     }
 
     private void preloadNextPage(int page){
@@ -149,7 +168,12 @@ public class SearchResultFragmentTwo extends Fragment {
     private void updateResultList(){
         JSONObject j = resultSet.retrieveResults(futureResultString);
         resultSet.addResults(j);
-        //preloadNextPage();
+        preloadNextPage();
+    }
+
+    private void customLoadMoreDataFromApi(int page) {
+        resultSet.setPage(page);
+        updateResultList();
     }
 
     private class InitialResults extends AsyncTask<Void, Void, Void> {
@@ -157,29 +181,75 @@ public class SearchResultFragmentTwo extends Fragment {
 
         private CardViewRecyclerViewAdapter cardViewRecyclerViewAdapter;
         private Context context;
+        private GridLayoutManager gridLayoutManager;
+        private final int TWO_COLUMNS = 2;
+        private TextView endText;
 
         @Override
         protected void onPreExecute(){
             context = SearchResultFragmentTwo.this.getActivity();
-            GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 2);
 
+            gridLayoutManager = new GridLayoutManager(context, TWO_COLUMNS);
             recyclerView = new RecyclerView(context);
             recyclerView.setLayoutManager(gridLayoutManager);
+
+            /* untested
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                                                    ViewGroup.LayoutParams.MATCH_PARENT,
+                                                    ViewGroup.LayoutParams.MATCH_PARENT);
+            params.setMargins(0, 0, 0, 20);
+            recyclerView.setLayoutParams(params);
+            */
+
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
             //Add results to ArrayList
-            updateResultList();
+            if(resultSet.getSize() == 0) {
+                updateResultList();
+            }
             cardViewRecyclerViewAdapter =
                     new CardViewRecyclerViewAdapter(resultSet.getResultList(), context);
+
+            endText = (TextView)
+                    LayoutInflater.from(context).inflate(R.layout.textview_end_of_list, null, false);
+
             return null;
         }
 
         @Override
         protected void onPostExecute(Void v){
             recyclerView.setAdapter(cardViewRecyclerViewAdapter);
+            recyclerView.setNestedScrollingEnabled(false);
             mLinearLayout.addView(recyclerView);
+            endText.setText("End of List");
+            mLinearLayout.addView(endText);
+
+            recyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(gridLayoutManager, resultSet.getPage()) {
+                @Override
+                public void onLoadMore(int page, int totalItemsCount) {
+                    if(resultSet.getTotalPages() > 0  && resultSet.getPage() < resultSet.getTotalPages()) {
+
+
+                        // update the adapter, saving the last known size
+                        int curSize = resultSet.getSize();
+                        //shownResults.addAll(resultSet.getDeltaResultList());
+                        customLoadMoreDataFromApi(page);
+
+                        // for efficiency purposes, only notify the adapter of what elements that got changed
+                        // curSize will equal to the index of the first element inserted because the list is 0-indexed
+                        cardViewRecyclerViewAdapter.notifyItemRangeInserted(curSize, resultSet.getSize() - 1);
+
+
+                        Toast.makeText(getActivity(),
+                                "Page " + resultSet.getPage() + " of " + resultSet.getTotalPages()
+                                + "\nTotal Items: " + resultSet.getSize(),
+                                Toast.LENGTH_SHORT)
+                                .show();
+                    }
+                }
+            });
         }
     }
 }

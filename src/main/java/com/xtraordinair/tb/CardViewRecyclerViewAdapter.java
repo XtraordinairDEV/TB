@@ -9,22 +9,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.koushikdutta.ion.Ion;
-import com.xtraordinair.tb.SearchResultFragment.OnListFragmentInteractionListener;
 
 import java.util.ArrayList;
 
 /**
  * TODO: Replace the implementation with code for your data type.
  */
-public class CardViewRecyclerViewAdapter
+class CardViewRecyclerViewAdapter
         extends RecyclerView.Adapter<CardViewRecyclerViewAdapter.ViewHolder> {
 
     private final ArrayList<SearchResult> mValues;
     private final Context mContext;
-    private final String LOLLIPOP_SDK = "5.";
 
-    public CardViewRecyclerViewAdapter(ArrayList<SearchResult> results,
-                                       Context c) {
+    CardViewRecyclerViewAdapter(ArrayList<SearchResult> results,
+                                Context c) {
         mValues = results;
         mContext = c;
     }
@@ -48,13 +46,18 @@ public class CardViewRecyclerViewAdapter
         holder.mNameView.setText(topText);
         holder.mSecondaryInfoView.setText(bottomText);
 
-        if(android.os.Build.VERSION.RELEASE.startsWith(LOLLIPOP_SDK)){
-            if(imgURL != null){
+        if(imgURL == null){
+            holder.mResultIcon.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        }else{
+            holder.mResultIcon.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+            //Quick fix for Koush Ion https:// not working on Lollipop
+            //Change https:// to http://
+            String LOLLIPOP_SDK = "5.";
+            if(android.os.Build.VERSION.RELEASE.startsWith(LOLLIPOP_SDK)){
                 imgURL = imgURL.replaceFirst("https://", "http://");
             }
-
         }
-
         //Load image into ImageView
         //If error or fail use Drawable
         if(itemType.equals("beer")) {
@@ -72,6 +75,7 @@ public class CardViewRecyclerViewAdapter
                     .error(R.drawable.ic_store_mall_directory_black_24dp)
                     .intoImageView(holder.mResultIcon);
         }
+
 
         /*
         holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -92,14 +96,14 @@ public class CardViewRecyclerViewAdapter
         return mValues.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final TextView mNameView;
-        public final TextView mSecondaryInfoView;
-        public final ImageView mResultIcon;
-        public SearchResult mItem;
+    class ViewHolder extends RecyclerView.ViewHolder {
+        final View mView;
+        final TextView mNameView;
+        final TextView mSecondaryInfoView;
+        final ImageView mResultIcon;
+        SearchResult mItem;
 
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             super(view);
             mView = view;
             mNameView = (TextView) view.findViewById(R.id.cardview_result_name_textview);

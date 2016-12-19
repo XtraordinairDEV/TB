@@ -1,5 +1,6 @@
 package com.xtraordinair.tb;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,7 +10,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -19,6 +19,12 @@ public class MainActivity extends AppCompatActivity
         SearchResultFragment.OnListFragmentInteractionListener,
         SearchFragment.OnFragmentInteractionListener {
 
+    public static String FRAGMENT_TAG = "Saved Fragment";
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
 
     //On Create Activity
     //First Method to Run on app start
@@ -28,6 +34,7 @@ public class MainActivity extends AppCompatActivity
         //Get cardview_layout from XML
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         //Get Material Design Toolbar cardview_layout from XML
         //set toolbar for MainActivity
@@ -49,10 +56,13 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.main_fragment, SearchFragment.newInstance())
-                .commit();
+        if(savedInstanceState == null) {
+            Toast.makeText(this, "nill", Toast.LENGTH_LONG).show();
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.main_fragment, SearchFragment.newInstance(), "searchFrag")
+                    .commit();
+        }
     }
 
     @Override
