@@ -67,13 +67,14 @@ public class SearchResultFragmentTwo extends Fragment {
         if (mLinearLayout == null) {
             NestedScrollView scrollview = new NestedScrollView(SearchResultFragmentTwo.this.getActivity());
             scrollview.setSmoothScrollingEnabled(true);
+
             mLinearLayout = (LinearLayout)
                     inflater.inflate(R.layout.result_list_linear_layout, container, false);
 
             if(recyclerView == null) {
                 loadResults();
             }
-            scrollview.setSmoothScrollingEnabled(true);
+
             scrollview.addView(mLinearLayout);
             return scrollview;
         } else{
