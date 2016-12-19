@@ -1,9 +1,11 @@
-package com.xtraordinair.tb;
+package com.xtraordinair.tb.entities;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.koushikdutta.async.future.Future;
+import com.xtraordinair.tb.JSONResultParser;
+import com.xtraordinair.tb.interfaces.SearchResult;
 
 import org.json.JSONArray;
 import org.json.JSONException;

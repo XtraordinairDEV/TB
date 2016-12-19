@@ -1,4 +1,4 @@
-package com.xtraordinair.tb;
+package com.xtraordinair.tb.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -9,26 +9,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.koushikdutta.ion.Ion;
-import com.xtraordinair.tb.SearchResultFragment.OnListFragmentInteractionListener;
+import com.xtraordinair.tb.R;
+import com.xtraordinair.tb.interfaces.SearchResult;
 
 import java.util.ArrayList;
 
 /**
  * TODO: Replace the implementation with code for your data type.
  */
-public class MySearchResultRecyclerViewAdapter
-        extends RecyclerView.Adapter<MySearchResultRecyclerViewAdapter.ViewHolder> {
+public class CardViewRecyclerViewAdapter
+        extends RecyclerView.Adapter<CardViewRecyclerViewAdapter.ViewHolder> {
 
     private final ArrayList<SearchResult> mValues;
-    private final OnListFragmentInteractionListener mListener;
     private final Context mContext;
-    private final String LOLLIPOP_SDK = "5.";
 
-    public MySearchResultRecyclerViewAdapter(ArrayList<SearchResult> results,
-                                             OnListFragmentInteractionListener listener,
-                                             Context c) {
+    public CardViewRecyclerViewAdapter(ArrayList<SearchResult> results,
+                                       Context c) {
         mValues = results;
-        mListener = listener;
         mContext = c;
     }
 
@@ -36,28 +33,33 @@ public class MySearchResultRecyclerViewAdapter
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.result_relative_layout_view, parent, false);
+                .inflate(R.layout.cardview_layout, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        String imgURL = mValues.get(position).getIconLoc();
-        String topText = mValues.get(position).getName();
-        String bottomText = mValues.get(position).getSecondaryInfo();
-        String itemType = mValues.get(position).getType();
+        String imgURL = mValues.get(holder.getAdapterPosition()).getMediumIconLoc();
+        String topText = mValues.get(holder.getAdapterPosition()).getName();
+        String bottomText = mValues.get(holder.getAdapterPosition()).getSecondaryInfo();
+        String itemType = mValues.get(holder.getAdapterPosition()).getType();
 
-        holder.mItem = mValues.get(position);
+        holder.mItem = mValues.get(holder.getAdapterPosition());
         holder.mNameView.setText(topText);
         holder.mSecondaryInfoView.setText(bottomText);
 
-        if(android.os.Build.VERSION.RELEASE.startsWith(LOLLIPOP_SDK)){
-            if(imgURL != null){
+        if(imgURL == null){
+            holder.mResultIcon.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        }else{
+            holder.mResultIcon.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+            //Quick fix for Koush Ion https:// not working on Lollipop
+            //Change https:// to http://
+            String LOLLIPOP_SDK = "5.";
+            if(android.os.Build.VERSION.RELEASE.startsWith(LOLLIPOP_SDK)){
                 imgURL = imgURL.replaceFirst("https://", "http://");
             }
-
         }
-
         //Load image into ImageView
         //If error or fail use Drawable
         if(itemType.equals("beer")) {
@@ -77,6 +79,7 @@ public class MySearchResultRecyclerViewAdapter
         }
 
 
+        /*
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,6 +90,7 @@ public class MySearchResultRecyclerViewAdapter
                 }
             }
         });
+        */
     }
 
     @Override
@@ -94,19 +98,19 @@ public class MySearchResultRecyclerViewAdapter
         return mValues.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final TextView mNameView;
-        public final TextView mSecondaryInfoView;
-        public final ImageView mResultIcon;
-        public SearchResult mItem;
+    class ViewHolder extends RecyclerView.ViewHolder {
+        final View mView;
+        final TextView mNameView;
+        final TextView mSecondaryInfoView;
+        final ImageView mResultIcon;
+        SearchResult mItem;
 
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             super(view);
             mView = view;
-            mNameView = (TextView) view.findViewById(R.id.result_name_textview);
-            mSecondaryInfoView = (TextView) view.findViewById(R.id.result_secondaryInfo_textview);
-            mResultIcon = (ImageView) view.findViewById(R.id.result_icon_imageview);
+            mNameView = (TextView) view.findViewById(R.id.cardview_result_name_textview);
+            mSecondaryInfoView = (TextView) view.findViewById(R.id.cardview_result_date_textview);
+            mResultIcon = (ImageView) view.findViewById(R.id.cardview_result_imageview);
         }
     }
 }

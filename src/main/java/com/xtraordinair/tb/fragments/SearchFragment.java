@@ -1,4 +1,4 @@
-package com.xtraordinair.tb;
+package com.xtraordinair.tb.fragments;
 
 import android.app.FragmentManager;
 import android.content.Context;
@@ -16,7 +16,9 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
-import com.koushikdutta.async.future.Future;
+import com.xtraordinair.tb.activities.MainActivity;
+import com.xtraordinair.tb.R;
+import com.xtraordinair.tb.entities.SearchResultsSet;
 
 
 /**

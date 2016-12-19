@@ -1,6 +1,8 @@
 package com.xtraordinair.tb;
 
-import android.util.Log;
+import com.xtraordinair.tb.entities.Beer;
+import com.xtraordinair.tb.entities.Brewery;
+import com.xtraordinair.tb.interfaces.SearchResult;
 
 import org.json.JSONArray;
 import org.json.JSONException;

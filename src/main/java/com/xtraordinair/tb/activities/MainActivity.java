@@ -1,6 +1,5 @@
-package com.xtraordinair.tb;
+package com.xtraordinair.tb.activities;
 
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,6 +12,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.xtraordinair.tb.R;
+import com.xtraordinair.tb.fragments.SearchFragment;
+import com.xtraordinair.tb.interfaces.SearchResult;
+import com.xtraordinair.tb.tobedeleted.SearchResultFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,

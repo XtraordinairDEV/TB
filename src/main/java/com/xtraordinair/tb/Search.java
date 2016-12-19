@@ -1,9 +1,9 @@
 package com.xtraordinair.tb;
 
-import android.app.Activity;
 import android.content.Context;
 
 import com.koushikdutta.async.future.Future;
+import com.xtraordinair.tb.entities.SearchResultsSet;
 
 /**
  * Created by Steph on 4/7/2016.

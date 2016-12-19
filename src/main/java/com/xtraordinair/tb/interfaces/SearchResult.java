@@ -1,4 +1,4 @@
-package com.xtraordinair.tb;
+package com.xtraordinair.tb.interfaces;
 
 import android.graphics.Bitmap;
 

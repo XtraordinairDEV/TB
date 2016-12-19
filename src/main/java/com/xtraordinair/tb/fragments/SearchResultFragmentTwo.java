@@ -1,4 +1,4 @@
-package com.xtraordinair.tb;
+package com.xtraordinair.tb.fragments;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -6,19 +6,19 @@ import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.koushikdutta.async.future.Future;
+import com.xtraordinair.tb.adapters.CardViewRecyclerViewAdapter;
+import com.xtraordinair.tb.listeners.EndlessRecyclerViewScrollListener;
+import com.xtraordinair.tb.R;
+import com.xtraordinair.tb.Search;
+import com.xtraordinair.tb.entities.SearchResultsSet;
 
 import org.json.JSONObject;
 
@@ -30,7 +30,6 @@ public class SearchResultFragmentTwo extends Fragment {
     private static String ARG_PARAM1  = "Result Set";
     private SearchResultsSet resultSet;
     private Future<String> futureResultString;
-    private LinearLayout mLinearLayout;
     private RecyclerView recyclerView;
 
     /**********************************************************
@@ -63,21 +62,11 @@ public class SearchResultFragmentTwo extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-
-        if (mLinearLayout == null) {
-            NestedScrollView scrollview = new NestedScrollView(SearchResultFragmentTwo.this.getActivity());
-            scrollview.setSmoothScrollingEnabled(true);
-
-            mLinearLayout = (LinearLayout)
-                    inflater.inflate(R.layout.result_list_linear_layout, container, false);
-
-            if(recyclerView == null) {
-                loadResults();
-            }
-
-            scrollview.addView(mLinearLayout);
-            return scrollview;
-        } else{
+        if(recyclerView == null){
+            recyclerView = (RecyclerView) inflater.inflate(R.layout.search_result_fragment, container, false);
+            loadResults();
+            return recyclerView;
+        }else{
             return null;
         }
     }
@@ -184,24 +173,13 @@ public class SearchResultFragmentTwo extends Fragment {
         private Context context;
         private GridLayoutManager gridLayoutManager;
         private final int TWO_COLUMNS = 2;
-        private TextView endText;
 
         @Override
         protected void onPreExecute(){
             context = SearchResultFragmentTwo.this.getActivity();
 
             gridLayoutManager = new GridLayoutManager(context, TWO_COLUMNS);
-            recyclerView = new RecyclerView(context);
             recyclerView.setLayoutManager(gridLayoutManager);
-
-            /* untested
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                                                    ViewGroup.LayoutParams.MATCH_PARENT,
-                                                    ViewGroup.LayoutParams.MATCH_PARENT);
-            params.setMargins(0, 0, 0, 20);
-            recyclerView.setLayoutParams(params);
-            */
-
         }
 
         @Override
@@ -213,19 +191,12 @@ public class SearchResultFragmentTwo extends Fragment {
             cardViewRecyclerViewAdapter =
                     new CardViewRecyclerViewAdapter(resultSet.getResultList(), context);
 
-            endText = (TextView)
-                    LayoutInflater.from(context).inflate(R.layout.textview_end_of_list, null, false);
-
             return null;
         }
 
         @Override
         protected void onPostExecute(Void v){
             recyclerView.setAdapter(cardViewRecyclerViewAdapter);
-            recyclerView.setNestedScrollingEnabled(false);
-            mLinearLayout.addView(recyclerView);
-            endText.setText("End of List");
-            mLinearLayout.addView(endText);
 
             recyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(gridLayoutManager, resultSet.getPage()) {
                 @Override

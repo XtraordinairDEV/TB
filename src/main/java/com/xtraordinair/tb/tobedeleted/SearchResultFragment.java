@@ -1,21 +1,19 @@
-package com.xtraordinair.tb;
+package com.xtraordinair.tb.tobedeleted;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.koushikdutta.async.future.Future;
+import com.xtraordinair.tb.Search;
+import com.xtraordinair.tb.interfaces.SearchResult;
+import com.xtraordinair.tb.entities.SearchResultsSet;
 
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 /**
  * A fragment representing a list of Items.
@@ -68,7 +66,7 @@ public class SearchResultFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_searchresult_list, container, false);
+        /*View view = inflater.inflate(R.layout.fragment_searchresult_list, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -122,6 +120,8 @@ public class SearchResultFragment extends Fragment {
 
         }
         return view;
+        */
+        return null;
     }
 
     @Override
