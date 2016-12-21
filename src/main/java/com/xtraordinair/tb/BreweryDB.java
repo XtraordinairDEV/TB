@@ -8,7 +8,7 @@ import com.xtraordinair.tb.entities.SearchResultsSet;
 /**
  * Created by Steph on 4/7/2016.
  */
-public class Search {
+public class BreweryDB {
 
     /* DEPRECATED
     public static SearchResultsSet accessAPISearchEndpoint(SearchResultsSet resultsSet, Context applicationContext, int page) {
@@ -19,12 +19,12 @@ public class Search {
     }
     */
 
-    public static Future<String> accessAPISearchEndpoint(SearchResultsSet resultsSet, Context context){
+    public static Future<String> searchEndpoint(SearchResultsSet resultsSet, Context context){
         return HTTPInfoRetrieve.getSearchQueryResult(resultsSet.getUserSearchQuery(),
                 resultsSet.getSearchType(), resultsSet.getPage(), context);
     }
 
-    public static Future<String> accessAPISearchEndpoint(SearchResultsSet resultsSet, Context context, int page) {
+    public static Future<String> searchEndpoint(SearchResultsSet resultsSet, Context context, int page) {
         return HTTPInfoRetrieve.getSearchQueryResult(resultsSet.getUserSearchQuery(),
                 resultsSet.getSearchType(), page, context);
     }

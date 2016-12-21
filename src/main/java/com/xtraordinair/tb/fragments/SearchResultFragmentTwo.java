@@ -17,8 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.koushikdutta.async.future.Future;
+import com.xtraordinair.tb.BreweryDB;
 import com.xtraordinair.tb.R;
-import com.xtraordinair.tb.Search;
 import com.xtraordinair.tb.adapters.CardViewRecyclerViewAdapter;
 import com.xtraordinair.tb.entities.SearchResultsSet;
 
@@ -163,19 +163,14 @@ public class SearchResultFragmentTwo extends Fragment {
     }
 
     private void preloadNextPage(int page){
-        futureResultString = Search.accessAPISearchEndpoint(resultSet, this.getActivity(),
+        futureResultString = BreweryDB.searchEndpoint(resultSet, this.getActivity(),
                 page);
     }
 
-    private void preloadNextPage(){
-        futureResultString = Search.accessAPISearchEndpoint(resultSet, this.getActivity(),
-                resultSet.getPage()+1);
-
-    }
     private void updateResultList(){
         JSONObject j = resultSet.retrieveResults(futureResultString);
         resultSet.addResults(j);
-        preloadNextPage();
+        preloadNextPage(resultSet.getPage());
     }
 
     private class LoadResults extends AsyncTask<Void, Void, Void> {
@@ -261,39 +256,6 @@ public class SearchResultFragmentTwo extends Fragment {
                 mEndOfListTextView.setVisibility(View.VISIBLE);
                 mLoadMoreButton.setVisibility(View.GONE);
             }
-            /*
-            recyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(gridLayoutManager, resultSet.getPage()) {
-                @Override
-                public void onLoadMore(int page, int totalItemsCount) {
-                    if(resultSet.getPage() < resultSet.getTotalPages()) {
-
-                        // update the adapter, saving the last known size
-                        final int curSize = resultSet.getSize();
-
-                        customLoadMoreDataFromApi(page);
-
-                        // for efficiency purposes, only notify the adapter of what elements that got changed
-                        // curSize will equal to the index of the first element inserted because the list is 0-indexed
-                        //cardViewRecyclerViewAdapter.notifyItemRangeInserted(curSize, resultSet.getSize() - 1);
-
-                        recyclerView.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                // Notify adapter with appropriate notify methods
-                                cardViewRecyclerViewAdapter.notifyItemRangeInserted(curSize, resultSet.getSize() - 1);
-                            }
-                        });
-
-
-                        Toast.makeText(getActivity(),
-                                "Page " + resultSet.getPage() + " of " + resultSet.getTotalPages()
-                                + "\nTotal Items: " + resultSet.getSize(),
-                                Toast.LENGTH_SHORT)
-                                .show();
-                    }
-                }
-            });
-            */
         }
     }
 }
