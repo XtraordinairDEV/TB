@@ -46,7 +46,8 @@ public class HTTPInfoRetrieve {
 
     private static Future<String> performDownload(String url, Context context) {
 
-        Future<String> resultString= Ion.with(context)
+        Future<String> resultString =
+                Ion.with(context)
                         .load(url)
                         .asString()
                         .setCallback(new FutureCallback<String>() {

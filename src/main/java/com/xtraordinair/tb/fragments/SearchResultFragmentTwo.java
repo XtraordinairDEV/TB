@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -34,8 +35,10 @@ public class SearchResultFragmentTwo extends Fragment {
     private Future<String> futureResultString;
     private RecyclerView recyclerView;
     private ScrollView mScrollView;
-    private Button mLoadMoreButton;
+    //private Button mLoadMoreButton;
     private TextView mEndOfListTextView;
+    private CardView mLoadMoreCardView;
+    private TextView mLoadMoreTextView;
 
     /**********************************************************
      * LIFECYCLE METHODS / OVERRIDDEN METHODS
@@ -58,7 +61,7 @@ public class SearchResultFragmentTwo extends Fragment {
             resultSet = savedInstanceState.getParcelable(ARG_PARAM1);
         } else if (getArguments() != null) {
             resultSet = getArguments().getParcelable(ARG_PARAM1);
-            //preloadNextPage(1);
+            //downloadMoreResults(1);
         }
     }
 
@@ -78,8 +81,12 @@ public class SearchResultFragmentTwo extends Fragment {
             recyclerView = (RecyclerView) mScrollView.findViewById(R.id.search_result_nested_recycler_view);
             recyclerView.setNestedScrollingEnabled(false);
 
+            //LoadMoreCardView to load more results on press
+            mLoadMoreCardView = (CardView) mScrollView.findViewById(R.id.load_more_cardview);
+            mLoadMoreTextView = (TextView) mScrollView.findViewById(R.id.load_more_textview);
+
             //LoadMoreButton (Button) to load more results on press
-            mLoadMoreButton = (Button) mScrollView.findViewById(R.id.load_more_button);
+            //mLoadMoreButton = (Button) mScrollView.findViewById(R.id.load_more_button);
 
             //EOLTextView (TextView) appears when all results are loaded to show user they are at
             //the end of the list
@@ -162,7 +169,7 @@ public class SearchResultFragmentTwo extends Fragment {
         return fragment;
     }
 
-    private void preloadNextPage(int page){
+    private void downloadMoreResults(int page){
         futureResultString = BreweryDB.searchEndpoint(resultSet, this.getActivity(),
                 page);
     }
@@ -170,7 +177,6 @@ public class SearchResultFragmentTwo extends Fragment {
     private void updateResultList(){
         JSONObject j = resultSet.retrieveResults(futureResultString);
         resultSet.addResults(j);
-        preloadNextPage(resultSet.getPage());
     }
 
     private class LoadResults extends AsyncTask<Void, Void, Void> {
@@ -191,7 +197,7 @@ public class SearchResultFragmentTwo extends Fragment {
         protected Void doInBackground(Void... voids) {
             //Add results to ArrayList
             if(resultSet.getSize() == 0) {
-                preloadNextPage(resultSet.getPage());
+                downloadMoreResults(resultSet.getPage());
                 updateResultList();
             }
             cardViewRecyclerViewAdapter =
@@ -204,17 +210,17 @@ public class SearchResultFragmentTwo extends Fragment {
             recyclerView.setAdapter(cardViewRecyclerViewAdapter);
 
             //If there are more pages to be loaded
-
             if(resultSet.getTotalPages() > 1 && resultSet.getPage() < resultSet.getTotalPages()) {
-                mLoadMoreButton.setOnClickListener(new View.OnClickListener() {
+                mLoadMoreCardView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         //One click at a time
-                        mLoadMoreButton.setVisibility(View.GONE);
+                        mLoadMoreCardView.setVisibility(View.GONE);
                         //Size before update
                         final int curSize = resultSet.getSize();
                         //Set next page number to be loaded
                         resultSet.setPage(resultSet.getPage() + 1);
+                        downloadMoreResults(resultSet.getPage());
                         //Download page and add to resultSet
                         updateResultList();
                         // for efficiency purposes, only notify the adapter of what elements that got changed
@@ -229,11 +235,11 @@ public class SearchResultFragmentTwo extends Fragment {
                         });
 
                         if(resultSet.getPage() < resultSet.getTotalPages()){
-                            mLoadMoreButton.setVisibility(View.VISIBLE);
+                            mLoadMoreCardView.setVisibility(View.VISIBLE);
                         }else{
                             mEndOfListTextView.setText("All Results Loaded");
                             mEndOfListTextView.setVisibility(View.VISIBLE);
-                            mLoadMoreButton.setVisibility(View.GONE);
+                            mLoadMoreCardView.setVisibility(View.GONE);
                         }
                         Toast.makeText(getActivity(),
                                 "Page " + resultSet.getPage() + " of " + resultSet.getTotalPages()
@@ -242,19 +248,19 @@ public class SearchResultFragmentTwo extends Fragment {
                                 .show();
                     }
                 });
-                mLoadMoreButton.setText("Load More");
-                mLoadMoreButton.setVisibility(View.VISIBLE);
+                mLoadMoreTextView.setText("Load More");
+                mLoadMoreCardView.setVisibility(View.VISIBLE);
                 mEndOfListTextView.setVisibility(View.GONE);
             }//No Results / Error
             else if(resultSet.getTotalPages() == 0){
                 mEndOfListTextView.setText("No Matches Found");
                 mEndOfListTextView.setVisibility(View.VISIBLE);
-                mLoadMoreButton.setVisibility(View.GONE);
+                mLoadMoreCardView.setVisibility(View.GONE);
             }//If all pages have been loaded or there is 1 page and it has been loaded
             else if(resultSet.getPage() == resultSet.getTotalPages()){
                 mEndOfListTextView.setText("All Results Loaded");
                 mEndOfListTextView.setVisibility(View.VISIBLE);
-                mLoadMoreButton.setVisibility(View.GONE);
+                mLoadMoreCardView.setVisibility(View.GONE);
             }
         }
     }

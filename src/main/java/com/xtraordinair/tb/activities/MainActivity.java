@@ -16,11 +16,9 @@ import android.widget.Toast;
 import com.xtraordinair.tb.R;
 import com.xtraordinair.tb.fragments.SearchFragment;
 import com.xtraordinair.tb.interfaces.SearchResult;
-import com.xtraordinair.tb.tobedeleted.SearchResultFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        SearchResultFragment.OnListFragmentInteractionListener,
         SearchFragment.OnFragmentInteractionListener {
 
     public static String FRAGMENT_TAG = "Saved Fragment";
@@ -131,11 +129,6 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    @Override
-    public void onListFragmentInteraction(SearchResult result) {
-
     }
 
     @Override
