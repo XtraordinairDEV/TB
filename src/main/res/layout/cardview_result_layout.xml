@@ -17,7 +17,7 @@
         <ImageView
             android:id="@+id/cardview_result_imageview"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="125dp"
             android:scaleType="fitCenter"
             android:cropToPadding="false"
             android:layout_centerInParent="false" />

@@ -29,11 +29,11 @@ public class CardViewRecyclerViewAdapter
         mContext = c;
     }
 
-    //Get cardview_layout from XML
+    //Get cardview_result_layout from XML
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.cardview_layout, parent, false);
+                .inflate(R.layout.cardview_result_layout, parent, false);
         return new ViewHolder(view);
     }
 

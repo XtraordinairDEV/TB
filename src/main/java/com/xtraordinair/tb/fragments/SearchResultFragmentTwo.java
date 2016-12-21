@@ -12,7 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -74,7 +73,7 @@ public class SearchResultFragmentTwo extends Fragment {
             //Inflate parent view and then bind all other views with (Parent).findViewById(int resid)
 
             //ScrollView (Parent)
-            mScrollView = (ScrollView) inflater.inflate(R.layout.search_result_fragment_nested, container, false);
+            mScrollView = (ScrollView) inflater.inflate(R.layout.fragment_search_results, container, false);
             mScrollView.setSmoothScrollingEnabled(true);
 
             //RecyclerView for displaying results

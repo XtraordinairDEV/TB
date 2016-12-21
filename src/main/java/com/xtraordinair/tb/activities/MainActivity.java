@@ -33,12 +33,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //Get saved activity if returning
-        //Get cardview_layout from XML
+        //Get cardview_result_layout from XML
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
 
-        //Get Material Design Toolbar cardview_layout from XML
+        //Get Material Design Toolbar cardview_result_layout from XML
         //set toolbar for MainActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
 
-        //Get Drawer cardview_layout
+        //Get Drawer cardview_result_layout
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         //If Back button pressed, close drawer
