@@ -11,13 +11,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.koushikdutta.async.future.Future;
-import com.xtraordinair.tb.adapters.CardViewRecyclerViewAdapter;
-import com.xtraordinair.tb.listeners.EndlessRecyclerViewScrollListener;
 import com.xtraordinair.tb.R;
 import com.xtraordinair.tb.Search;
+import com.xtraordinair.tb.adapters.CardViewRecyclerViewAdapter;
 import com.xtraordinair.tb.entities.SearchResultsSet;
 
 import org.json.JSONObject;
@@ -31,6 +33,9 @@ public class SearchResultFragmentTwo extends Fragment {
     private SearchResultsSet resultSet;
     private Future<String> futureResultString;
     private RecyclerView recyclerView;
+    private ScrollView mScrollView;
+    private Button mLoadMoreButton;
+    private TextView mEndOfListTextView;
 
     /**********************************************************
      * LIFECYCLE METHODS / OVERRIDDEN METHODS
@@ -62,10 +67,28 @@ public class SearchResultFragmentTwo extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        if(recyclerView == null){
-            recyclerView = (RecyclerView) inflater.inflate(R.layout.search_result_fragment, container, false);
-            loadResults();
-            return recyclerView;
+        if (mScrollView == null){
+            //Inflate parent view and then bind all other views with (Parent).findViewById(int resid)
+
+            //ScrollView (Parent)
+            mScrollView = (ScrollView) inflater.inflate(R.layout.search_result_fragment_nested, container, false);
+            mScrollView.setSmoothScrollingEnabled(true);
+
+            //RecyclerView for displaying results
+            recyclerView = (RecyclerView) mScrollView.findViewById(R.id.search_result_nested_recycler_view);
+            recyclerView.setNestedScrollingEnabled(false);
+
+            //LoadMoreButton (Button) to load more results on press
+            mLoadMoreButton = (Button) mScrollView.findViewById(R.id.load_more_button);
+
+            //EOLTextView (TextView) appears when all results are loaded to show user they are at
+            //the end of the list
+            mEndOfListTextView = (TextView) mScrollView.findViewById(R.id.search_result_eol_textview);
+
+            //Load results from internet in background thread
+            new LoadResults().execute();
+
+            return mScrollView;
         }else{
             return null;
         }
@@ -94,6 +117,9 @@ public class SearchResultFragmentTwo extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        //On rotation save:
+
+        //ResultSet for loaded results / current page num / etc
         outState.putParcelable(ARG_PARAM1, resultSet);
         super.onSaveInstanceState(outState);
     }
@@ -136,15 +162,6 @@ public class SearchResultFragmentTwo extends Fragment {
         return fragment;
     }
 
-    private void loadResults() {
-        //Get first page of results
-        if(resultSet.getSize() == 0) {
-            preloadNextPage(1);
-        }
-
-        new InitialResults().execute();
-    }
-
     private void preloadNextPage(int page){
         futureResultString = Search.accessAPISearchEndpoint(resultSet, this.getActivity(),
                 page);
@@ -161,22 +178,15 @@ public class SearchResultFragmentTwo extends Fragment {
         preloadNextPage();
     }
 
-    private void customLoadMoreDataFromApi(int page) {
-        resultSet.setPage(page);
-        updateResultList();
-    }
-
-    private class InitialResults extends AsyncTask<Void, Void, Void> {
-
+    private class LoadResults extends AsyncTask<Void, Void, Void> {
 
         private CardViewRecyclerViewAdapter cardViewRecyclerViewAdapter;
-        private Context context;
+        private Context context = SearchResultFragmentTwo.this.getActivity();
         private GridLayoutManager gridLayoutManager;
         private final int TWO_COLUMNS = 2;
 
         @Override
         protected void onPreExecute(){
-            context = SearchResultFragmentTwo.this.getActivity();
 
             gridLayoutManager = new GridLayoutManager(context, TWO_COLUMNS);
             recyclerView.setLayoutManager(gridLayoutManager);
@@ -186,11 +196,11 @@ public class SearchResultFragmentTwo extends Fragment {
         protected Void doInBackground(Void... voids) {
             //Add results to ArrayList
             if(resultSet.getSize() == 0) {
+                preloadNextPage(resultSet.getPage());
                 updateResultList();
             }
             cardViewRecyclerViewAdapter =
                     new CardViewRecyclerViewAdapter(resultSet.getResultList(), context);
-
             return null;
         }
 
@@ -198,20 +208,81 @@ public class SearchResultFragmentTwo extends Fragment {
         protected void onPostExecute(Void v){
             recyclerView.setAdapter(cardViewRecyclerViewAdapter);
 
+            //If there are more pages to be loaded
+
+            if(resultSet.getTotalPages() > 1 && resultSet.getPage() < resultSet.getTotalPages()) {
+                mLoadMoreButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //One click at a time
+                        mLoadMoreButton.setVisibility(View.GONE);
+                        //Size before update
+                        final int curSize = resultSet.getSize();
+                        //Set next page number to be loaded
+                        resultSet.setPage(resultSet.getPage() + 1);
+                        //Download page and add to resultSet
+                        updateResultList();
+                        // for efficiency purposes, only notify the adapter of what elements that got changed
+                        // curSize will equal to the index of the first element inserted because the list is 0-indexed
+                        //cardViewRecyclerViewAdapter.notifyItemRangeInserted(curSize, resultSet.getSize() - 1);
+                        recyclerView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                // Notify adapter with appropriate notify methods
+                                cardViewRecyclerViewAdapter.notifyItemRangeInserted(curSize, resultSet.getSize() - 1);
+                            }
+                        });
+
+                        if(resultSet.getPage() < resultSet.getTotalPages()){
+                            mLoadMoreButton.setVisibility(View.VISIBLE);
+                        }else{
+                            mEndOfListTextView.setText("All Results Loaded");
+                            mEndOfListTextView.setVisibility(View.VISIBLE);
+                            mLoadMoreButton.setVisibility(View.GONE);
+                        }
+                        Toast.makeText(getActivity(),
+                                "Page " + resultSet.getPage() + " of " + resultSet.getTotalPages()
+                                        + "\nTotal Items: " + resultSet.getSize(),
+                                Toast.LENGTH_SHORT)
+                                .show();
+                    }
+                });
+                mLoadMoreButton.setText("Load More");
+                mLoadMoreButton.setVisibility(View.VISIBLE);
+                mEndOfListTextView.setVisibility(View.GONE);
+            }//No Results / Error
+            else if(resultSet.getTotalPages() == 0){
+                mEndOfListTextView.setText("No Matches Found");
+                mEndOfListTextView.setVisibility(View.VISIBLE);
+                mLoadMoreButton.setVisibility(View.GONE);
+            }//If all pages have been loaded or there is 1 page and it has been loaded
+            else if(resultSet.getPage() == resultSet.getTotalPages()){
+                mEndOfListTextView.setText("All Results Loaded");
+                mEndOfListTextView.setVisibility(View.VISIBLE);
+                mLoadMoreButton.setVisibility(View.GONE);
+            }
+            /*
             recyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(gridLayoutManager, resultSet.getPage()) {
                 @Override
                 public void onLoadMore(int page, int totalItemsCount) {
-                    if(resultSet.getTotalPages() > 0  && resultSet.getPage() < resultSet.getTotalPages()) {
-
+                    if(resultSet.getPage() < resultSet.getTotalPages()) {
 
                         // update the adapter, saving the last known size
-                        int curSize = resultSet.getSize();
-                        //shownResults.addAll(resultSet.getDeltaResultList());
+                        final int curSize = resultSet.getSize();
+
                         customLoadMoreDataFromApi(page);
 
                         // for efficiency purposes, only notify the adapter of what elements that got changed
                         // curSize will equal to the index of the first element inserted because the list is 0-indexed
-                        cardViewRecyclerViewAdapter.notifyItemRangeInserted(curSize, resultSet.getSize() - 1);
+                        //cardViewRecyclerViewAdapter.notifyItemRangeInserted(curSize, resultSet.getSize() - 1);
+
+                        recyclerView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                // Notify adapter with appropriate notify methods
+                                cardViewRecyclerViewAdapter.notifyItemRangeInserted(curSize, resultSet.getSize() - 1);
+                            }
+                        });
 
 
                         Toast.makeText(getActivity(),
@@ -222,6 +293,7 @@ public class SearchResultFragmentTwo extends Fragment {
                     }
                 }
             });
+            */
         }
     }
 }

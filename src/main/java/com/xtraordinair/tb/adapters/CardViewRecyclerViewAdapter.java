@@ -50,6 +50,12 @@ public class CardViewRecyclerViewAdapter
 
         if(imgURL == null){
             holder.mResultIcon.setScaleType(ImageView.ScaleType.FIT_CENTER);
+
+            if(itemType.equals("beer")) {
+                holder.mResultIcon.setImageResource(R.drawable.ic_local_bar_black_24dp);
+            }else if(itemType.equals("brewery")){
+                holder.mResultIcon.setImageResource(R.drawable.ic_store_mall_directory_black_24dp);
+            }
         }else{
             holder.mResultIcon.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
@@ -59,25 +65,23 @@ public class CardViewRecyclerViewAdapter
             if(android.os.Build.VERSION.RELEASE.startsWith(LOLLIPOP_SDK)){
                 imgURL = imgURL.replaceFirst("https://", "http://");
             }
-        }
-        //Load image into ImageView
-        //If error or fail use Drawable
-        if(itemType.equals("beer")) {
-            Ion.with(mContext)
-                    .load(imgURL)
-                    .withBitmap()
-                    .placeholder(R.drawable.ic_local_bar_black_24dp)
-                    .error(R.drawable.ic_local_bar_black_24dp)
-                    .intoImageView(holder.mResultIcon);
-        }else if(itemType.equals("brewery")){
-            Ion.with(mContext)
-                    .load(imgURL)
-                    .withBitmap()
-                    .placeholder(R.drawable.ic_store_mall_directory_black_24dp)
-                    .error(R.drawable.ic_store_mall_directory_black_24dp)
-                    .intoImageView(holder.mResultIcon);
-        }
 
+            if(itemType.equals("beer")) {
+                Ion.with(mContext)
+                        .load(imgURL)
+                        .withBitmap()
+                        .placeholder(R.drawable.ic_insert_photo_black_24dp)
+                        .error(R.drawable.ic_insert_photo_black_24dp)
+                        .intoImageView(holder.mResultIcon);
+            }else if(itemType.equals("brewery")){
+                Ion.with(mContext)
+                        .load(imgURL)
+                        .withBitmap()
+                        .placeholder(R.drawable.ic_insert_photo_black_24dp)
+                        .error(R.drawable.ic_insert_photo_black_24dp)
+                        .intoImageView(holder.mResultIcon);
+            }
+        }
 
         /*
         holder.mView.setOnClickListener(new View.OnClickListener() {

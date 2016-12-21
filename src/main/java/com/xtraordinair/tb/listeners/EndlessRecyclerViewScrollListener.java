@@ -2,6 +2,7 @@ package com.xtraordinair.tb.listeners;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnScrollListener {
     // The minimum amount of items to have below your current scroll position
@@ -52,7 +53,15 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
         // If it isn’t currently loading, we check to see if we have breached
         // the visibleThreshold and need to reload more data.
         // If we do need to reload some more data, we execute onLoadMore to fetch the data.
+
         if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
+            //Log.i("XO", "INSIDE");
+            //Log.i("XO", "Loading: " + loading);
+            //Log.i("XO", "totalItemCount: " + totalItemCount);
+            //Log.i("XO", "visibleItemCount: " + visibleItemCount);
+            //Log.i("XO", "firstVisibleItem: " + firstVisibleItem);
+            //Log.i("XO", "visibleThreshold: " + visibleThreshold);
+
             currentPage++;
             onLoadMore(currentPage, totalItemCount);
             loading = true;
