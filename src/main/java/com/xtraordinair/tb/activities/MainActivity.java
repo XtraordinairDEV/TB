@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(this, "nill", Toast.LENGTH_LONG).show();
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
-                    .replace(R.id.main_fragment, SearchFragment.newInstance(), "searchFrag")
+                    .replace(R.id.main_fragment, SearchFragment.newInstance())
                     .commit();
         }
     }

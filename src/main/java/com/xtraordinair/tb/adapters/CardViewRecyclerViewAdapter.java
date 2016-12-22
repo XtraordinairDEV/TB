@@ -100,7 +100,7 @@ public class CardViewRecyclerViewAdapter
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mSearchResultFragment.switchFragment(holder.getAdapterPosition());
             }
         });
     }

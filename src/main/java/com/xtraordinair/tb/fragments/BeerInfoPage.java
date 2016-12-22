@@ -37,9 +37,7 @@ public class BeerInfoPage extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(savedInstanceState != null){
-            mBeer = savedInstanceState.getParcelable(ARG_PARAM1);
-        } else if (getArguments() != null) {
+        if (getArguments() != null) {
             mBeer = getArguments().getParcelable(ARG_PARAM1);
         }
     }
