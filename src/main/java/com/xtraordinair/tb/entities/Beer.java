@@ -18,6 +18,7 @@ public class Beer implements Parcelable, SearchResult {
     private String largeIconLoc;
     private String alcoholByVolume;
     private String bitternessUnits;
+    private String standardReferenceMethod;
     private String originalGravity;
     private String servingTemperature;
     private String glassName;
@@ -222,12 +223,21 @@ public class Beer implements Parcelable, SearchResult {
         glassName = glass;
     }
 
+    public String getStandardReferenceMethod() {
+        return standardReferenceMethod;
+    }
+
+    public void setStandardReferenceMethod(String standardReferenceMethod) {
+        this.standardReferenceMethod = standardReferenceMethod;
+    }
+
     public static Beer newInstance(JSONObject currentObject) {
         final String TAG_ID = "id";
         final String TAG_Name = "name";
         final String TAG_DESCRIPTION = "description";
         final String TAG_ABV = "abv";
         final String TAG_IBU = "ibu";
+        final String TAG_SRM = "srm";
         final String TAG_ORIGINAL_GRAVITY = "originalGravity";
         final String TAG_SERVING_TEMPERATURE = "servingTemperatureDisplay";
         final String TAG_LABEL = "labels";
@@ -253,6 +263,7 @@ public class Beer implements Parcelable, SearchResult {
         newBeer.setDescription(currentObject.optString(TAG_DESCRIPTION,"---"));
         newBeer.setABV(currentObject.optString(TAG_ABV,"---"));
         newBeer.setIBU(currentObject.optString(TAG_IBU,"---"));
+        newBeer.setStandardReferenceMethod(currentObject.optString(TAG_SRM, "---"));
         newBeer.setOriginalGravity(currentObject.optString(TAG_ORIGINAL_GRAVITY,"---"));
         newBeer.setServingTemperature(currentObject.optString(TAG_SERVING_TEMPERATURE,"---"));
 
@@ -298,6 +309,10 @@ public class Beer implements Parcelable, SearchResult {
      * PARCELABLE CODE START
      */
 
+    /*
+     * PARCELABLE CODE END
+     */
+
     @Override
     public int describeContents() {
         return 0;
@@ -312,6 +327,7 @@ public class Beer implements Parcelable, SearchResult {
         dest.writeString(this.largeIconLoc);
         dest.writeString(this.alcoholByVolume);
         dest.writeString(this.bitternessUnits);
+        dest.writeString(this.standardReferenceMethod);
         dest.writeString(this.originalGravity);
         dest.writeString(this.servingTemperature);
         dest.writeString(this.glassName);
@@ -338,6 +354,7 @@ public class Beer implements Parcelable, SearchResult {
         this.largeIconLoc = in.readString();
         this.alcoholByVolume = in.readString();
         this.bitternessUnits = in.readString();
+        this.standardReferenceMethod = in.readString();
         this.originalGravity = in.readString();
         this.servingTemperature = in.readString();
         this.glassName = in.readString();
@@ -367,8 +384,4 @@ public class Beer implements Parcelable, SearchResult {
             return new Beer[size];
         }
     };
-
-    /*
-     * PARCELABLE CODE END
-     */
 }

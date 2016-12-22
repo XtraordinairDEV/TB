@@ -1,5 +1,7 @@
 package com.xtraordinair.tb.adapters;
 
+import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +12,10 @@ import android.widget.TextView;
 
 import com.koushikdutta.ion.Ion;
 import com.xtraordinair.tb.R;
+import com.xtraordinair.tb.entities.Beer;
+import com.xtraordinair.tb.entities.Brewery;
+import com.xtraordinair.tb.fragments.BeerInfoPage;
+import com.xtraordinair.tb.fragments.BreweryInfoPage;
 import com.xtraordinair.tb.interfaces.SearchResult;
 
 import java.util.ArrayList;
@@ -22,11 +28,14 @@ public class CardViewRecyclerViewAdapter
 
     private final ArrayList<SearchResult> mValues;
     private final Context mContext;
+    private final Activity mActivity;
 
     public CardViewRecyclerViewAdapter(ArrayList<SearchResult> results,
-                                       Context c) {
+                                       Context context,
+                                       Activity activity) {
         mValues = results;
-        mContext = c;
+        mContext = context;
+        mActivity = activity;
     }
 
     //Get cardview_result_layout from XML
@@ -83,18 +92,29 @@ public class CardViewRecyclerViewAdapter
             }
         }
 
-        /*
+
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
+                if(holder.mItem.getType().equals("beer")) {
+                    FragmentManager fragmentManager = mActivity.getFragmentManager();
+                    fragmentManager.beginTransaction()
+                            .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                            .replace(R.id.main_fragment,
+                                    BeerInfoPage.newInstance((Beer) holder.mItem), "SearchResults")
+                            .addToBackStack("Results -> InfoPage")
+                            .commit();
+                }else if(holder.mItem.getType().equals("brewery")){
+                    FragmentManager fragmentManager = mActivity.getFragmentManager();
+                    fragmentManager.beginTransaction()
+                            .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                            .replace(R.id.main_fragment,
+                                    BreweryInfoPage.newInstance((Brewery) holder.mItem), "SearchResults")
+                            .addToBackStack("Results -> InfoPage")
+                            .commit();
                 }
             }
         });
-        */
     }
 
     @Override

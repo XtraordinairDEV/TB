@@ -13,4 +13,10 @@
     <string name="search_item_type">Search for:</string>
     <string name="_beer">Name</string>
     <string name="_breweryName">Bottom Line</string>
+    <string name="abv_title">ABV</string>
+    <string name="not_available">N/A</string>
+    <string name="ibu_title">IBU</string>
+    <string name="srm_title">SRM</string>
+    <string name="og_title">OG</string>
+    <string name="description_title">Description</string>
 </resources>

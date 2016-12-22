@@ -28,7 +28,7 @@ import org.json.JSONObject;
  * Created by Steph on 12/8/2016.
  */
 
-public class SearchResultFragmentTwo extends Fragment {
+public class SearchResultFragment extends Fragment {
     private static String ARG_PARAM1  = "Result Set";
     private SearchResultsSet resultSet;
     private Future<String> futureResultString;
@@ -83,9 +83,6 @@ public class SearchResultFragmentTwo extends Fragment {
             //LoadMoreCardView to load more results on press
             mLoadMoreCardView = (CardView) mScrollView.findViewById(R.id.load_more_cardview);
             mLoadMoreTextView = (TextView) mScrollView.findViewById(R.id.load_more_textview);
-
-            //LoadMoreButton (Button) to load more results on press
-            //mLoadMoreButton = (Button) mScrollView.findViewById(R.id.load_more_button);
 
             //EOLTextView (TextView) appears when all results are loaded to show user they are at
             //the end of the list
@@ -158,8 +155,11 @@ public class SearchResultFragmentTwo extends Fragment {
      * LIFECYCLE METHODS / OVERRIDDEN METHODS END
      **********************************************************/
 
-    public static SearchResultFragmentTwo newInstance(SearchResultsSet resultsSet) {
-        SearchResultFragmentTwo fragment = new SearchResultFragmentTwo();
+    /**********************************************************
+     *NEW INSTANCE METHOD
+     *********************************************************/
+    public static SearchResultFragment newInstance(SearchResultsSet resultsSet) {
+        SearchResultFragment fragment = new SearchResultFragment();
 
         Bundle args = new Bundle();
         args.putParcelable(ARG_PARAM1, resultsSet);
@@ -167,6 +167,10 @@ public class SearchResultFragmentTwo extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
+    /**********************************************************
+     *SEARCH RESULT FRAGMENT SPECIFIC
+     *********************************************************/
 
     private void downloadMoreResults(int page){
         futureResultString = BreweryDB.searchEndpoint(resultSet, this.getActivity(),
@@ -178,10 +182,13 @@ public class SearchResultFragmentTwo extends Fragment {
         resultSet.addResults(j);
     }
 
+    /**********************************************************
+     * BACKGROUND TASKS
+     *********************************************************/
     private class LoadResults extends AsyncTask<Void, Void, Void> {
 
         private CardViewRecyclerViewAdapter cardViewRecyclerViewAdapter;
-        private Context context = SearchResultFragmentTwo.this.getActivity();
+        private Context context = SearchResultFragment.this.getActivity();
         private GridLayoutManager gridLayoutManager;
         private final int TWO_COLUMNS = 2;
 
@@ -200,7 +207,10 @@ public class SearchResultFragmentTwo extends Fragment {
                 updateResultList();
             }
             cardViewRecyclerViewAdapter =
-                    new CardViewRecyclerViewAdapter(resultSet.getResultList(), context);
+                    new CardViewRecyclerViewAdapter(
+                            resultSet.getResultList(),
+                            context,
+                            SearchResultFragment.this.getActivity());
             return null;
         }
 
