@@ -1,6 +1,8 @@
 package com.xtraordinair.tb.fragments;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
@@ -9,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +23,9 @@ import com.koushikdutta.async.future.Future;
 import com.xtraordinair.tb.BreweryDB;
 import com.xtraordinair.tb.R;
 import com.xtraordinair.tb.adapters.CardViewRecyclerViewAdapter;
+import com.xtraordinair.tb.entities.Beer;
 import com.xtraordinair.tb.entities.SearchResultsSet;
+import com.xtraordinair.tb.interfaces.SearchResult;
 
 import org.json.JSONObject;
 
@@ -29,12 +34,11 @@ import org.json.JSONObject;
  */
 
 public class SearchResultFragment extends Fragment {
-    private static String ARG_PARAM1  = "Result Set";
+    private static String ARG_PARAM1  = "THELIST";
     private SearchResultsSet resultSet;
     private Future<String> futureResultString;
     private RecyclerView recyclerView;
     private ScrollView mScrollView;
-    //private Button mLoadMoreButton;
     private TextView mEndOfListTextView;
     private CardView mLoadMoreCardView;
     private TextView mLoadMoreTextView;
@@ -56,12 +60,6 @@ public class SearchResultFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(savedInstanceState != null){
-            resultSet = savedInstanceState.getParcelable(ARG_PARAM1);
-        } else if (getArguments() != null) {
-            resultSet = getArguments().getParcelable(ARG_PARAM1);
-            //downloadMoreResults(1);
-        }
     }
 
     @Nullable
@@ -70,6 +68,12 @@ public class SearchResultFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
 
         if (mScrollView == null){
+
+            SearchResultsSet tempSet = getArguments().getParcelable(ARG_PARAM1);
+
+            if(tempSet != null){
+                resultSet = tempSet;
+            }
             //Inflate parent view and then bind all other views with (Parent).findViewById(int resid)
 
             //ScrollView (Parent)
@@ -87,9 +91,6 @@ public class SearchResultFragment extends Fragment {
             //EOLTextView (TextView) appears when all results are loaded to show user they are at
             //the end of the list
             mEndOfListTextView = (TextView) mScrollView.findViewById(R.id.search_result_eol_textview);
-
-            //Load results from internet in background thread
-            new LoadResults().execute();
 
             return mScrollView;
         }else{
@@ -111,6 +112,9 @@ public class SearchResultFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
+        //Load results from internet in background thread
+        new LoadResults().execute();
+
     }
 
     @Override
@@ -130,6 +134,7 @@ public class SearchResultFragment extends Fragment {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+
     }
 
     @Override
@@ -202,14 +207,16 @@ public class SearchResultFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... voids) {
             //Add results to ArrayList
-            downloadMoreResults(resultSet.getPage());
-            updateResultList();
+            if(resultSet.getSize() == 0) {
+                downloadMoreResults(resultSet.getPage());
+                updateResultList();
+            }
 
             cardViewRecyclerViewAdapter =
                     new CardViewRecyclerViewAdapter(
                             resultSet.getResultList(),
                             context,
-                            SearchResultFragment.this.getActivity());
+                            SearchResultFragment.this);
             return null;
         }
 

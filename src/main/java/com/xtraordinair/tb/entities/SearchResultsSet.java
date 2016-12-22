@@ -21,7 +21,6 @@ public class SearchResultsSet implements Parcelable {
     private String userSearchQuery;
     private int page;
     private ArrayList<SearchResult> resultList = new ArrayList<>();
-    private ArrayList<SearchResult> deltaResultArrayList = new ArrayList<>();
     private int totalPages = 0;
 
     public SearchResultsSet(boolean isPag, int sType, String query) {
@@ -55,9 +54,6 @@ public class SearchResultsSet implements Parcelable {
         return resultList.get(pos);
     }
 
-    public ArrayList<SearchResult> getDeltaResultList(){
-        return deltaResultArrayList;
-    }
 
     private void setTotalPages(int numPages){
         totalPages = numPages;
@@ -68,11 +64,7 @@ public class SearchResultsSet implements Parcelable {
     }
 
     public int getSize() {
-        if(resultList != null) {
             return resultList.size();
-        }else{
-            return 0;
-        }
     }
 
     public JSONObject retrieveResults(Future<String> futureResultString) {
@@ -100,14 +92,11 @@ public class SearchResultsSet implements Parcelable {
 
     public void addResults(JSONObject searchQueryResult) {
         JSONArray parsedResults = JSONResultParser.parseSearchResultsToJSONArray(searchQueryResult);
-        deltaResultArrayList = new ArrayList<>();
 
         setTotalPages(JSONResultParser.parseTotalNumberOfPages(searchQueryResult));
 
         if(parsedResults != null){
-            deltaResultArrayList.addAll(JSONResultParser.createArrayListFromJSONArray(parsedResults,
-                    searchType));
-            resultList.addAll(deltaResultArrayList);
+            resultList.addAll(JSONResultParser.createArrayListFromJSONArray(parsedResults, searchType));
         }
 
     }
@@ -133,7 +122,6 @@ public class SearchResultsSet implements Parcelable {
         dest.writeString(this.userSearchQuery);
         dest.writeInt(this.page);
         dest.writeList(this.resultList);
-        dest.writeList(this.deltaResultArrayList);
         dest.writeInt(this.totalPages);
     }
 
@@ -144,8 +132,6 @@ public class SearchResultsSet implements Parcelable {
         this.page = in.readInt();
         this.resultList = new ArrayList<SearchResult>();
         in.readList(this.resultList, SearchResult.class.getClassLoader());
-        this.deltaResultArrayList = new ArrayList<SearchResult>();
-        in.readList(this.deltaResultArrayList, SearchResult.class.getClassLoader());
         this.totalPages = in.readInt();
     }
 
@@ -160,8 +146,4 @@ public class SearchResultsSet implements Parcelable {
             return new SearchResultsSet[size];
         }
     };
-
-    /*
-     * PARCELABLE CODE END
-     */
 }
