@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.koushikdutta.ion.Ion;
 import com.xtraordinair.tb.R;
+import com.xtraordinair.tb.activities.MainActivity;
 import com.xtraordinair.tb.entities.Beer;
 import com.xtraordinair.tb.entities.Brewery;
 import com.xtraordinair.tb.fragments.BeerInfoPage;
@@ -31,15 +32,12 @@ public class CardViewRecyclerViewAdapter
 
     private final ArrayList<SearchResult> mValues;
     private final Context mContext;
-    private final SearchResultFragment mSearchResultFragment;
 
     public CardViewRecyclerViewAdapter(ArrayList<SearchResult> results,
-                                       Context context,
-                                       SearchResultFragment searchResultFragment) {
+                                       Context context) {
         super();
         mValues = results;
         mContext = context;
-        mSearchResultFragment = searchResultFragment;
     }
 
     //Get cardview_result_layout from XML
@@ -100,7 +98,18 @@ public class CardViewRecyclerViewAdapter
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mSearchResultFragment.switchFragment(holder.getAdapterPosition());
+                MainActivity activity = (MainActivity) mContext;
+                FragmentManager fragmentManager = activity.getFragmentManager();
+                if(holder.mItem.getType().equals("beer")) {
+                    fragmentManager.beginTransaction()
+                            .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                            .replace(R.id.main_fragment,
+                                    BeerInfoPage.newInstance((Beer) holder.mItem))
+                            .addToBackStack("A")
+                            .commit();
+                }else if(holder.mItem.getType().equals("brewery")){
+                    //Not Implemented
+                }
             }
         });
     }

@@ -66,11 +66,7 @@ public class SearchResultFragment extends Fragment {
 
         if (mScrollView == null){
 
-            SearchResultsSet tempSet = getArguments().getParcelable(ARG_PARAM1);
-
-            if(tempSet != null){
-                resultSet = tempSet;
-            }
+            resultSet = getArguments().getParcelable(ARG_PARAM1);
             //Inflate parent view and then bind all other views with (Parent).findViewById(int resid)
 
             //ScrollView (Parent)
@@ -184,16 +180,6 @@ public class SearchResultFragment extends Fragment {
         resultSet.addResults(j);
     }
 
-    public void switchFragment(int adapterPosition) {
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
-                .replace(R.id.main_fragment,
-                        BeerInfoPage.newInstance((Beer) resultSet.get(adapterPosition)))
-                .addToBackStack("A")
-                .commit();
-    }
-
     /**********************************************************
      * BACKGROUND TASKS
      *********************************************************/
@@ -222,8 +208,7 @@ public class SearchResultFragment extends Fragment {
             cardViewRecyclerViewAdapter =
                     new CardViewRecyclerViewAdapter(
                             resultSet.getResultList(),
-                            context,
-                            SearchResultFragment.this);
+                            context);
             return null;
         }
 

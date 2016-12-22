@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.koushikdutta.ion.Ion;
 import com.xtraordinair.tb.R;
 import com.xtraordinair.tb.entities.Beer;
 
@@ -65,7 +66,9 @@ public class BeerInfoPage extends Fragment{
 
             //Label image
             ImageView labelImageView = (ImageView) itemScrollView.findViewById(R.id.label_image_imageview);
-            labelImageView.setImageBitmap(mBeer.getBitmapLarge());
+            Ion.with(this.getActivity())
+                    .load(mBeer.getLargeIconLoc())
+                    .intoImageView(labelImageView);
 
             //ABV content
             TextView abvTitleTextView = (TextView) itemScrollView.findViewById(R.id.abv_title_textview);
@@ -185,7 +188,8 @@ public class BeerInfoPage extends Fragment{
     }
 
     public static Fragment newInstance(Beer mItem) {
-        SearchResultFragment fragment = new SearchResultFragment();
+        BeerInfoPage fragment = new BeerInfoPage();
+
 
         Bundle args = new Bundle();
         args.putParcelable(ARG_PARAM1, mItem);
