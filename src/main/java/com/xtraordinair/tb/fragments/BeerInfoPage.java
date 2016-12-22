@@ -15,8 +15,6 @@ import android.widget.TextView;
 import com.xtraordinair.tb.R;
 import com.xtraordinair.tb.entities.Beer;
 
-import org.w3c.dom.Text;
-
 /**
  * Created by Steph on 12/21/2016.
  */

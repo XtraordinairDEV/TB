@@ -68,7 +68,11 @@ public class SearchResultsSet implements Parcelable {
     }
 
     public int getSize() {
-        return resultList.size();
+        if(resultList != null) {
+            return resultList.size();
+        }else{
+            return 0;
+        }
     }
 
     public JSONObject retrieveResults(Future<String> futureResultString) {

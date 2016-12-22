@@ -202,10 +202,9 @@ public class SearchResultFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... voids) {
             //Add results to ArrayList
-            if(resultSet.getSize() == 0) {
-                downloadMoreResults(resultSet.getPage());
-                updateResultList();
-            }
+            downloadMoreResults(resultSet.getPage());
+            updateResultList();
+
             cardViewRecyclerViewAdapter =
                     new CardViewRecyclerViewAdapter(
                             resultSet.getResultList(),

@@ -38,7 +38,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/assoc_brewery_name_content_textview"
-                    android:layout_below="@id/name_content_textview"
+                    android:layout_below="@+id/name_content_textview"
                     android:textSize="14sp"
                     android:textStyle="italic"
                     android:paddingLeft="10dp"
@@ -51,7 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/label_image_cardview"
-            android:layout_below="@id/name_info_cardview"
+            android:layout_below="@+id/name_info_cardview"
             android:layout_margin="5dp"
             android:layout_centerInParent="true"
             app:cardElevation="5dp"
@@ -74,7 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/stats_overview_textview"
-            android:layout_below="@id/label_image_cardview"
+            android:layout_below="@+id/label_image_cardview"
             android:layout_margin="5dp"
             app:cardElevation="5dp"
             app:cardCornerRadius="10dp"
@@ -88,79 +88,79 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/abv_title_textview"
-                    android:layout_above="@id/abv_content_textview"
-                    android:layout_toLeftOf="@id/ibu_title_textview"
-                    android:layout_toStartOf="@id/ibu_title_textview"
+                    android:layout_above="@+id/abv_content_textview"
+                    android:layout_toLeftOf="@+id/ibu_title_textview"
+                    android:layout_toStartOf="@+id/ibu_title_textview"
                     android:layout_centerInParent="true"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/abv_content_textview"
-                    android:layout_below="@id/abv_title_textview"
-                    android:layout_toLeftOf="@id/ibu_content_textview"
-                    android:layout_toStartOf="@id/ibu_content_textview"
+                    android:layout_below="@+id/abv_title_textview"
+                    android:layout_toLeftOf="@+id/ibu_content_textview"
+                    android:layout_toStartOf="@+id/ibu_content_textview"
                     android:layout_centerInParent="true"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/ibu_title_textview"
-                    android:layout_above="@id/ibu_content_textview"
-                    android:layout_toLeftOf="@id/srm_title_textview"
-                    android:layout_toStartOf="@id/srm_title_textview"
-                    android:layout_toRightOf="@id/abv_title_textview"
-                    android:layout_toEndOf="@id/abv_title_textview"
+                    android:layout_above="@+id/ibu_content_textview"
+                    android:layout_toLeftOf="@+id/srm_title_textview"
+                    android:layout_toStartOf="@+id/srm_title_textview"
+                    android:layout_toRightOf="@+id/abv_title_textview"
+                    android:layout_toEndOf="@+id/abv_title_textview"
                     android:layout_centerInParent="true"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/ibu_content_textview"
-                    android:layout_below="@id/abv_title_textview"
-                    android:layout_toLeftOf="@id/srm_content_textview"
-                    android:layout_toStartOf="@id/srm_content_textview"
-                    android:layout_toRightOf="@id/abv_content_textview"
-                    android:layout_toEndOf="@id/abv_content_textview"
+                    android:layout_below="@+id/abv_title_textview"
+                    android:layout_toLeftOf="@+id/srm_content_textview"
+                    android:layout_toStartOf="@+id/srm_content_textview"
+                    android:layout_toRightOf="@+id/abv_content_textview"
+                    android:layout_toEndOf="@+id/abv_content_textview"
                     android:layout_centerInParent="true"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/srm_title_textview"
-                    android:layout_above="@id/srm_content_textview"
-                    android:layout_toLeftOf="@id/og_title_textview"
-                    android:layout_toStartOf="@id/og_title_textview"
-                    android:layout_toRightOf="@id/ibu_title_textview"
-                    android:layout_toEndOf="@id/ibu_title_textview"
+                    android:layout_above="@+id/srm_content_textview"
+                    android:layout_toLeftOf="@+id/og_title_textview"
+                    android:layout_toStartOf="@+id/og_title_textview"
+                    android:layout_toRightOf="@+id/ibu_title_textview"
+                    android:layout_toEndOf="@+id/ibu_title_textview"
                     android:layout_centerInParent="true"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/srm_content_textview"
-                    android:layout_below="@id/srm_title_textview"
-                    android:layout_toLeftOf="@id/ibu_content_textview"
-                    android:layout_toStartOf="@id/ibu_content_textview"
-                    android:layout_toRightOf="@id/og_content_textview"
-                    android:layout_toEndOf="@id/og_content_textview"
+                    android:layout_below="@+id/srm_title_textview"
+                    android:layout_toLeftOf="@+id/ibu_content_textview"
+                    android:layout_toStartOf="@+id/ibu_content_textview"
+                    android:layout_toRightOf="@+id/og_content_textview"
+                    android:layout_toEndOf="@+id/og_content_textview"
                     android:layout_centerInParent="true"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/og_title_textview"
-                    android:layout_above="@id/og_content_textview"
-                    android:layout_toRightOf="@id/srm_title_textview"
-                    android:layout_toEndOf="@id/srm_title_textview"
+                    android:layout_above="@+id/og_content_textview"
+                    android:layout_toRightOf="@+id/srm_title_textview"
+                    android:layout_toEndOf="@+id/srm_title_textview"
                     android:layout_centerInParent="true"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/og_content_textview"
-                    android:layout_below="@id/og_title_textview"
-                    android:layout_toRightOf="@id/srm_content_textview"
-                    android:layout_toEndOf="@id/srm_content_textview"
+                    android:layout_below="@+id/og_title_textview"
+                    android:layout_toRightOf="@+id/srm_content_textview"
+                    android:layout_toEndOf="@+id/srm_content_textview"
                     android:layout_centerInParent="true"/>
 
             </RelativeLayout>
@@ -170,7 +170,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/description_info_cardview"
-            android:layout_below="@id/stats_overview_textview"
+            android:layout_below="@+id/stats_overview_textview"
             android:layout_margin="5dp"
             app:cardElevation="5dp"
             app:cardCornerRadius="10dp"
@@ -184,7 +184,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/description_title_textview"
-                    android:layout_above="@id/description_content_textview"
+                    android:layout_above="@+id/description_content_textview"
                     android:textSize="16sp"
                     android:textStyle="bold"/>
 
@@ -192,7 +192,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/description_content_textview"
-                    android:layout_below="@id/description_title_textview"
+                    android:layout_below="@+id/description_title_textview"
                     android:textSize="12sp"/>
 
             </RelativeLayout>
