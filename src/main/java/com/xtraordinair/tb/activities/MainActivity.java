@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         if(savedInstanceState == null) {
-            Toast.makeText(this, "nill", Toast.LENGTH_LONG).show();
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.main_fragment, SearchFragment.newInstance())
