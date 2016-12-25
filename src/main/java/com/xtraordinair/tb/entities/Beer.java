@@ -37,6 +37,7 @@ public class Beer implements Parcelable, SearchResult {
     private Bitmap bitmapLarge;
 
     public Beer() {
+
     }
 
     public Beer(String id) {beerID = id;}
@@ -233,7 +234,7 @@ public class Beer implements Parcelable, SearchResult {
 
     public static Beer newInstance(JSONObject currentObject) {
         final String TAG_ID = "id";
-        final String TAG_Name = "name";
+        final String TAG_NAME = "name";
         final String TAG_DESCRIPTION = "description";
         final String TAG_ABV = "abv";
         final String TAG_IBU = "ibu";
@@ -259,15 +260,19 @@ public class Beer implements Parcelable, SearchResult {
         Beer newBeer = new Beer();
 
         newBeer.setID(currentObject.optString(TAG_ID, "---"));
-        newBeer.setName(currentObject.optString(TAG_Name, "---"));
+        newBeer.setName(currentObject.optString(TAG_NAME, "---"));
         newBeer.setDescription(currentObject.optString(TAG_DESCRIPTION,"---"));
         newBeer.setABV(currentObject.optString(TAG_ABV,"---"));
         newBeer.setIBU(currentObject.optString(TAG_IBU,"---"));
-        newBeer.setStandardReferenceMethod(currentObject.optString(TAG_SRM, "---"));
         newBeer.setOriginalGravity(currentObject.optString(TAG_ORIGINAL_GRAVITY,"---"));
         newBeer.setServingTemperature(currentObject.optString(TAG_SERVING_TEMPERATURE,"---"));
 
-        JSONObject subObject = currentObject.optJSONObject(TAG_LABEL);
+        JSONObject subObject = currentObject.optJSONObject(TAG_SRM);
+        if(subObject != null){
+            newBeer.setStandardReferenceMethod(subObject.optString(TAG_NAME, "---"));
+        }
+
+        subObject = currentObject.optJSONObject(TAG_LABEL);
         if(subObject != null){
             newBeer.setIconLoc(subObject.optString(TAG_IMAGE_ICON, "---"));
             newBeer.setMediumIconLoc(subObject.optString(TAG_IMAGE_MEDIUM, "---"));
@@ -307,10 +312,6 @@ public class Beer implements Parcelable, SearchResult {
 
     /*
      * PARCELABLE CODE START
-     */
-
-    /*
-     * PARCELABLE CODE END
      */
 
     @Override

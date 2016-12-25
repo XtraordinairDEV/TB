@@ -64,7 +64,7 @@ public class SearchResultFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        if (mScrollView == null){
+        if (mScrollView == null || !mScrollView.isShown()){
 
             resultSet = getArguments().getParcelable(ARG_PARAM1);
             //Inflate parent view and then bind all other views with (Parent).findViewById(int resid)
@@ -72,6 +72,7 @@ public class SearchResultFragment extends Fragment {
             //ScrollView (Parent)
             mScrollView = (ScrollView) inflater.inflate(R.layout.fragment_search_results, container, false);
             mScrollView.setSmoothScrollingEnabled(true);
+
 
             //RecyclerView for displaying results
             recyclerView = (RecyclerView) mScrollView.findViewById(R.id.search_result_nested_recycler_view);
