@@ -8,11 +8,11 @@ import com.xtraordinair.tb.entities.Brewery;
 /**
  * Created by Steph on 12/21/2016.
  */
-public class BreweryInfoPage {
+public class BreweryInfoPage extends Fragment {
     private static final String ARG_PARAM1 = "item";
 
     public static Fragment newInstance(Brewery mItem) {
-        SearchResultFragment fragment = new SearchResultFragment();
+        BreweryInfoPage fragment = new BreweryInfoPage();
 
         Bundle args = new Bundle();
         args.putParcelable(ARG_PARAM1, mItem);

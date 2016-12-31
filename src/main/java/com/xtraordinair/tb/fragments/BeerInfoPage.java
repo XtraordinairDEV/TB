@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.xtraordinair.tb.R;
 import com.xtraordinair.tb.entities.Beer;
@@ -68,7 +69,14 @@ public class BeerInfoPage extends Fragment{
             ImageView labelImageView = (ImageView) itemScrollView.findViewById(R.id.label_image_imageview);
             Ion.with(this.getActivity())
                     .load(mBeer.getLargeIconLoc())
-                    .intoImageView(labelImageView);
+                    .withBitmap()
+                    .intoImageView(labelImageView)
+                    .setCallback(new FutureCallback<ImageView>() {
+                        @Override
+                        public void onCompleted(Exception e, ImageView result) {
+
+                        }
+                    });
 
             //ABV content
             TextView abvTitleTextView = (TextView) itemScrollView.findViewById(R.id.abv_title_textview);

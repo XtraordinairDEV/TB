@@ -5,6 +5,8 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.BitmapDrawableFactory;
 import com.koushikdutta.ion.Ion;
 import com.xtraordinair.tb.R;
 import com.xtraordinair.tb.activities.MainActivity;
@@ -83,7 +87,12 @@ public class CardViewRecyclerViewAdapter
                         .withBitmap()
                         .placeholder(R.drawable.ic_insert_photo_black_24dp)
                         .error(R.drawable.ic_insert_photo_black_24dp)
-                        .intoImageView(holder.mResultIcon);
+                        .intoImageView(holder.mResultIcon)
+                        .setCallback(new FutureCallback<ImageView>() {
+                            @Override
+                            public void onCompleted(Exception ex, ImageView result) {
+                            }
+                        });
             }else if(itemType.equals("brewery")){
                 Ion.with(mContext)
                         .load(imgURL)
