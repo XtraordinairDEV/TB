@@ -3,6 +3,7 @@ package com.xtraordinair.tb.fragments;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -66,15 +67,18 @@ public class BeerInfoPage extends Fragment{
             }
 
             //Label image
-            ImageView labelImageView = (ImageView) itemScrollView.findViewById(R.id.label_image_imageview);
+            final ImageView labelImageView = (ImageView) itemScrollView.findViewById(R.id.label_image_imageview);
+            labelImageView.setImageBitmap(mBeer.getBitmapMedium());
             Ion.with(this.getActivity())
                     .load(mBeer.getLargeIconLoc())
-                    .withBitmap()
-                    .intoImageView(labelImageView)
-                    .setCallback(new FutureCallback<ImageView>() {
+                    .asBitmap()
+                    .setCallback(new FutureCallback<Bitmap>() {
                         @Override
-                        public void onCompleted(Exception e, ImageView result) {
-
+                        public void onCompleted(Exception e, Bitmap result) {
+                            if(result != null){
+                                mBeer.setBitmapLarge(result);
+                                labelImageView.setImageBitmap(mBeer.getBitmapLarge());
+                            }
                         }
                     });
 

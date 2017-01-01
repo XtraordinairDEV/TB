@@ -79,28 +79,21 @@ public class CardViewRecyclerViewAdapter
             String LOLLIPOP_SDK = "5.";
             if(android.os.Build.VERSION.RELEASE.startsWith(LOLLIPOP_SDK)){
                 imgURL = imgURL.replaceFirst("https://", "http://");
+                holder.mResultIcon.setImageResource(R.drawable.ic_insert_photo_black_24dp);
             }
 
-            if(itemType.equals("beer")) {
-                Ion.with(mContext)
-                        .load(imgURL)
-                        .withBitmap()
-                        .placeholder(R.drawable.ic_insert_photo_black_24dp)
-                        .error(R.drawable.ic_insert_photo_black_24dp)
-                        .intoImageView(holder.mResultIcon)
-                        .setCallback(new FutureCallback<ImageView>() {
-                            @Override
-                            public void onCompleted(Exception ex, ImageView result) {
-                            }
-                        });
-            }else if(itemType.equals("brewery")){
-                Ion.with(mContext)
-                        .load(imgURL)
-                        .withBitmap()
-                        .placeholder(R.drawable.ic_insert_photo_black_24dp)
-                        .error(R.drawable.ic_insert_photo_black_24dp)
-                        .intoImageView(holder.mResultIcon);
-            }
+            Ion.with(mContext)
+                .load(imgURL)
+                .asBitmap()
+                .setCallback(new FutureCallback<Bitmap>() {
+                    @Override
+                    public void onCompleted(Exception e, Bitmap result) {
+                        if(result != null) {
+                            holder.mItem.setBitmapMedium(result);
+                            holder.mResultIcon.setImageBitmap(holder.mItem.getBitmapMedium());
+                        }
+                    }
+                });
         }
 
 
