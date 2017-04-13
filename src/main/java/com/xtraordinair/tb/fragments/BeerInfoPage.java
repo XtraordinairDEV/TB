@@ -77,6 +77,7 @@ public class BeerInfoPage extends Fragment{
                         public void onCompleted(Exception e, Bitmap result) {
                             if(result != null){
                                 mBeer.setBitmapLarge(result);
+                                labelImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                                 labelImageView.setImageBitmap(mBeer.getBitmapLarge());
                             }
                         }

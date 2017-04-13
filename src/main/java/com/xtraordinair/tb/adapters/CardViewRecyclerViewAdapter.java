@@ -1,13 +1,10 @@
 package com.xtraordinair.tb.adapters;
 
-import android.app.Activity;
-import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.koushikdutta.async.future.FutureCallback;
-import com.koushikdutta.ion.BitmapDrawableFactory;
 import com.koushikdutta.ion.Ion;
 import com.xtraordinair.tb.R;
 import com.xtraordinair.tb.activities.MainActivity;
@@ -23,7 +19,6 @@ import com.xtraordinair.tb.entities.Beer;
 import com.xtraordinair.tb.entities.Brewery;
 import com.xtraordinair.tb.fragments.BeerInfoPage;
 import com.xtraordinair.tb.fragments.BreweryInfoPage;
-import com.xtraordinair.tb.fragments.SearchResultFragment;
 import com.xtraordinair.tb.interfaces.SearchResult;
 
 import java.util.ArrayList;
@@ -102,6 +97,7 @@ public class CardViewRecyclerViewAdapter
             public void onClick(View v) {
                 MainActivity activity = (MainActivity) mContext;
                 FragmentManager fragmentManager = activity.getFragmentManager();
+                Log.i("XO mItem type", holder.mItem.getType());
                 if(holder.mItem.getType().equals("beer")) {
                     fragmentManager.beginTransaction()
                             .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
@@ -110,7 +106,12 @@ public class CardViewRecyclerViewAdapter
                             .addToBackStack("A")
                             .commit();
                 }else if(holder.mItem.getType().equals("brewery")){
-                    //Not Implemented
+                    fragmentManager.beginTransaction()
+                            .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                            .replace(R.id.main_fragment,
+                                    BreweryInfoPage.newInstance((Brewery) holder.mItem))
+                            .addToBackStack("A")
+                            .commit();
                 }
             }
         });
